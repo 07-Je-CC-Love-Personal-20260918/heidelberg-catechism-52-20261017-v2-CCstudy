@@ -9,7 +9,7 @@ try{var s=localStorage.getItem('hc-theme');if(s)ti=TH.indexOf(s)<0?0:TH.indexOf(
 function applyTheme(){
   var t=TH[ti];
   if(t==='auto')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);
-  d.getElementById('themeBtn').textContent={auto:'主题·跟随',light:'主题·明',dark:'主题·暗'}[t];
+  d.getElementById('themeBtn').textContent={auto:'主题·随',light:'主题·明',dark:'主题·暗'}[t];
   try{localStorage.setItem('hc-theme',t);}catch(e){}
 }
 d.getElementById('themeBtn').onclick=function(){ti=(ti+1)%3;applyTheme();};applyTheme();
@@ -17,12 +17,12 @@ d.getElementById('themeBtn').onclick=function(){ti=(ti+1)%3;applyTheme();};apply
 /* ---- toc hide / drawer ---- */
 var shell=d.querySelector('.shell');
 function toggleToc(){
-  if(window.innerWidth<=1080){b.classList.toggle('nav');}
+  if(window.innerWidth<=1080){b.classList.toggle('nav');
+    d.getElementById('tocBtn').classList.toggle('on',b.classList.contains('nav'));}
   else{shell.classList.toggle('hid');
     d.getElementById('tocBtn').classList.toggle('on',!shell.classList.contains('hid'));}
 }
 d.getElementById('tocBtn').onclick=toggleToc;
-d.getElementById('menuBtn').onclick=toggleToc;
 d.getElementById('tocOpen').onclick=function(){shell.classList.remove('hid');
   d.getElementById('tocBtn').classList.add('on');};
 var scrim=d.querySelector('.scrim');if(scrim)scrim.onclick=function(){b.classList.remove('nav');};
@@ -33,7 +33,7 @@ d.addEventListener('keydown',function(e){if(e.key==='Escape')b.classList.remove(
 var drill=d.getElementById('drillBtn');
 drill.onclick=function(){
   b.classList.toggle('drill');drill.classList.toggle('on');
-  drill.textContent=b.classList.contains('drill')?'退出背诵':'背诵模式';
+  drill.textContent=b.classList.contains('drill')?'退出背诵':'背诵';
   d.querySelectorAll('.qa.open').forEach(function(q){q.classList.remove('open');});
 };
 d.querySelectorAll('.qa').forEach(function(q){
@@ -138,7 +138,7 @@ d.getElementById('resetBtn').onclick=function(){
 d.getElementById('toTop').onclick=function(){window.scrollTo({top:0,behavior:'smooth'});};
 d.getElementById('printBtn').onclick=function(){
   d.querySelectorAll('.qa.open').forEach(function(q){q.classList.remove('open');});
-  b.classList.remove('drill');drill.classList.remove('on');drill.textContent='背诵模式';
+  b.classList.remove('drill');drill.classList.remove('on');drill.textContent='背诵';
   window.print();
 };
 })();

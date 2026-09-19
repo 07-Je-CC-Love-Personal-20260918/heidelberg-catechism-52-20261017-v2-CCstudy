@@ -3,6 +3,8 @@
 import math
 
 def fig(cap, body, cls=""):
+    if "<svg " in body:
+        body = '<div class="fscroll">%s</div>' % body
     return ('<figure class="%s"><figcaption>%s</figcaption>%s</figure>' % (cls, cap, body))
 
 # ══════════════════════ 1. 改革宗欧洲地图 ══════════════════════

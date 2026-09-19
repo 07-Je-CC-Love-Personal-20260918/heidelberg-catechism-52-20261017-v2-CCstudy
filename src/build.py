@@ -8,6 +8,8 @@ import charts as C
 from creeds import ECUMENICAL, UNITY, ISOMORPH, TEMPER
 from story import TYPOLOGY, THEMES, BT_SECTION, CT_SECTION
 from quiz import QUIZ, MNEMONICS, ANCHORS, PAIRS, PASTORAL
+from topics import TOPICS, GERMAN_WORDS
+import charts2 as C2
 
 E = lambda s: html.escape(str(s), quote=False)
 A = lambda s: html.escape(str(s), quote=True)
@@ -106,12 +108,11 @@ def build():
 
     # topbar
     w('<div class="topbar"><div class="tb">'
-      '<button class="btn" id="menuBtn">目录</button>'
-      '<button class="btn on" id="tocBtn">目录</button>'
+      '<button class="btn on" id="tocBtn" title="显示／隐藏目录">目录</button>'
       '<div class="brand">CATECHESIS <b>PALATINA</b> · 1563</div><div class="sp"></div>'
       '<div class="tbs"><input id="q" type="search" placeholder="搜索关键词、问号、主题…" aria-label="搜索"></div>'
-      '<button class="btn" id="drillBtn">背诵模式</button>'
-      '<button class="btn" id="themeBtn">主题</button>'
+      '<button class="btn" id="drillBtn" title="遮盖答案，点按逐问自测">背诵</button>'
+      '<button class="btn" id="themeBtn" title="明／暗／跟随系统">主题</button>'
       '<button class="btn" id="printBtn">打印</button>'
       '</div></div><div class="scrim"></div>')
 
@@ -143,6 +144,11 @@ def build():
             last = d["part"]
             w('<div class="toc-h">%s · %s</div>' % (E(d["part"]), PL[d["part"]]))
         w('<a href="#ld%d" data-n="%d"><span class="no">%d</span>%s</a>' % (d["n"], d["n"], d["n"], E(d["title"])))
+    w('<div class="toc-h">跨主日专题 · TOPICA</div>')
+    for t in TOPICS:
+        w('<a href="#%s"><span class="no">%s</span>%s</a>'
+          % (t["id"], t["eyebrow"].replace("专题", ""), E(t["title"].split("：")[0])))
+    w('<a href="#tp-german"><span class="no">七</span>德文钥词六则</a>')
     w('<div class="toc-h">结语 · CONCLUSIO</div>'
       '<a href="#closure"><span class="no">·</span>三重闭环</a>')
     w('<div class="toc-h">附录 · APPENDIX</div>')
@@ -159,7 +165,7 @@ def build():
       '前因后果、真实处境、写了什么、如何应用，并以三大普世信经与三项联合信条为坐标。</p>'
       '<div class="stats">')
     for b_, t in [("1563", "海德堡首版"), ("129", "问答"), ("52", "主日"), ("3", "困苦·拯救·感恩"),
-                  ("10", "总论专章"), ("12", "附录"), ("%d" % 20, "图表"), ("%d" % len(QUIZ), "自测题")]:
+                  ("10", "总论专章"), ("7", "跨主日专题"), ("12", "附录"), ("%d" % len(QUIZ), "自测题")]:
         w('<div><b>%s</b>%s</div>' % (b_, t))
     w('</div></header><div id="sNote" class="lead hidden" style="margin-top:20px"></div>')
 
@@ -172,7 +178,7 @@ def build():
 
     s = INTROD["intro-canon"]
     w(sec(s["id"], s["eyebrow"], s["title"], s["lead"],
-          blocks(s["blocks"]) + C.storyline() + C.parabola()))
+          blocks(s["blocks"]) + C.storyline() + C.parabola() + C2.qa_bars(LDS)))
 
     w(sec(BT_SECTION["id"], BT_SECTION["eyebrow"], BT_SECTION["title"], BT_SECTION["lead"],
           blocks(BT_SECTION["blocks"])
@@ -190,6 +196,7 @@ def build():
           + '<div class="cards">%s</div>' % ''.join(creed_card(c, "e") for c in ECUMENICAL)
           + '<div class="eyebrow" style="margin-top:28px">三项联合信条 · DRIE FORMULIEREN VAN ENIGHEID</div>'
           + '<div class="cards">%s</div>' % ''.join(creed_card(c, "u") for c in UNITY)
+          + C2.creed_chord()
           + C.fig("表 · 三段同构：使徒信经的骨架如何贯穿海德堡、比利时信条与多特信经", table(ISOMORPH))
           + C.fig("表 · 家族气质对照：六份文件各自在回答什么问题", table(TEMPER))
           + C.fig("表 · 改革宗信条家族分工", table(TABLES["confessions"]))))
@@ -247,6 +254,26 @@ def build():
             w('<div class="part-div"><div><div class="n">%s</div><h2>%s</h2></div>'
               '<div class="zh">%s</div></div>' % (PL[d["part"]], E(d["part"]), E(desc)))
         w(render_ld(d))
+
+    # ---------- 跨主日专题 ----------
+    w('<div class="part-div"><div><div class="n">TOPICA</div><h2>跨主日专题</h2></div>'
+      '<div class="zh">把散在 52 主日中的同一条线索抽出来，逐条追到底</div></div>')
+    FIGS = {"assurance": C2.assurance, "chalcedon": C2.chalcedon}
+    for t in TOPICS:
+        body = blocks(t["blocks"])
+        if t.get("fig") == "assurance":
+            body = C2.assurance() + body
+        elif t.get("fig") == "chalcedon":
+            body = C2.chalcedon() + body
+        elif t.get("fig") == "supper":
+            body = C2.supper_space() + body + C2.supper_timeline()
+        if t.get("table"):
+            body += table(t["table"])
+        w(sec(t["id"], t["eyebrow"], t["title"], t["lead"], body, cls="appsec"))
+    w(sec("tp-german", "专题七", "德文钥词六则：分量压在一个词上",
+          "《海德堡要理问答》以德文写成，拉丁文本同年并出。许多神学判断并不在长句里，而在一个词的选择上。"
+          "读中译时，这六个词最值得回到原文。",
+          C2.german_cards(GERMAN_WORDS), cls="appsec"))
 
     # ---------- 结语 ----------
     w(sec("closure", "结语", "三重闭环：全书如何收束",
