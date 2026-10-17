@@ -43,5 +43,8 @@ jobs:
         if: env.NETLIFY_AUTH_TOKEN != ''
         run: |
           npm i -g netlify-cli@17 >/dev/null 2>&1
-          netlify sites:create --name "$SITE" --disable-linking || true
-          netlify deploy --prod --dir=_site --site "$SITE"
+          ID=$(netlify api listSites --data "{\"name\":\"$SITE\",\"filter\":\"all\"}" | python3 -c "import json,sys,os;print(next((x['id'] for x in json.load(sys.stdin) if x['name']==os.environ['SITE']),''))")
+          if [ -z "$ID" ]; then
+            ID=$(netlify api createSite --data "{\"body\":{\"name\":\"$SITE\"}}" | python3 -c "import json,sys;print(json.load(sys.stdin)['id'])")
+          fi
+          netlify deploy --prod --dir=_site --site "$ID"
