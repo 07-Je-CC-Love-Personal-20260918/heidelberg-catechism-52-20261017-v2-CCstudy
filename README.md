@@ -12,7 +12,7 @@
 | Netlify | https://heidelberg-catechism-52-20261017-v2-ccstudy.netlify.app |
 | 仓库 | https://github.com/07-Je-CC-Love-Personal-20260918/heidelberg-catechism-52-20261017-v2-CCstudy |
 
-推送 `main` 后 Actions 自动重建并部署 Surge（需仓库密钥 `SURGE_TOKEN`）与 Netlify（需 `NETLIFY_AUTH_TOKEN`、`NETLIFY_SITE_ID`）；GitHub Pages 从 `main` 根目录发布。
+推送 `main` 后 Actions 自动重建并部署 Surge（需仓库密钥 `SURGE_TOKEN`）与 Netlify（组织密钥 `NETLIFY_AUTH_TOKEN_20260918`）；GitHub Pages 从 `main` 根目录发布。
 
 ## 内容
 

@@ -39,7 +39,9 @@ jobs:
         run: npx --yes surge ./_site "${SITE}.surge.sh" --token "$SURGE_TOKEN"
       - name: Deploy to Netlify
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        if: env.NETLIFY_AUTH_TOKEN != '' && env.NETLIFY_SITE_ID != ''
-        run: npx --yes netlify-cli@17 deploy --prod --dir=_site --site "$NETLIFY_SITE_ID" --auth "$NETLIFY_AUTH_TOKEN"
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN_20260918 }}
+        if: env.NETLIFY_AUTH_TOKEN != ''
+        run: |
+          npm i -g netlify-cli@17 >/dev/null 2>&1
+          netlify sites:create --name "$SITE" --disable-linking || true
+          netlify deploy --prod --dir=_site --site "$SITE"
