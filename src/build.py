@@ -10,6 +10,7 @@ from story import TYPOLOGY, THEMES, BT_SECTION, CT_SECTION
 from quiz import QUIZ, MNEMONICS, ANCHORS, PAIRS, PASTORAL
 from topics import TOPICS, GERMAN_WORDS
 import charts2 as C2
+import ui2
 
 E = lambda s: html.escape(str(s), quote=False)
 A = lambda s: html.escape(str(s), quote=True)
@@ -104,7 +105,7 @@ def build():
       '%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E'
       '%3Crect width=%2732%27 height=%2732%27 fill=%27%231F3864%27/%3E'
       '%3Ctext x=%2716%27 y=%2723%27 font-size=%2720%27 text-anchor=%27middle%27 fill=%27%23F6F2E8%27%3EH%3C/text%3E%3C/svg%3E">')
-    w('<style>%s</style></head><body><div id="prog"></div>' % CSS)
+    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2, ui2.ICONS))
 
     # topbar
     w('<div class="topbar"><div class="tb">'
@@ -123,6 +124,8 @@ def build():
                  ("bt-canon", "III·A", "圣经神学：跟随故事"),
                  ("bt-cov", "III·B", "圣约神学：全书的语法"),
                  ("intro-compare", "IV", "三大普世信经与三项联合信条"),
+                 ("creed-reader", "IV·A", "信经背诵室（干净阅读版）"),
+                 ("forms-cmp", "IV·B", "三项联合信条深度对比"),
                  ("intro-method", "V", "释经进路：四层读法"),
                  ("intro-map", "VI", "改革宗欧洲：影响流向地图"),
                  ("intro-text", "VII", "文本、版本与要理讲道传统"),
@@ -201,6 +204,13 @@ def build():
           + C.fig("表 · 家族气质对照：六份文件各自在回答什么问题", table(TEMPER))
           + C.fig("表 · 改革宗信条家族分工", table(TABLES["confessions"]))))
 
+    w(sec("creed-reader", "总论 IV·A", "信经背诵室：三大普世信经干净阅读版",
+          "去掉一切注释，只留经文般的句子。分段着色标出三一结构；开启「逐句遮盖」即可逐句自测背诵。",
+          ui2.readers_section()))
+    w(sec("forms-cmp", "总论 IV·B", "三项联合信条深度对比：为什么需要三份",
+          "比利时信条、海德堡要理问答、多特信经：三个地点、三场危机、三种文体，最终在多特被一同采纳为「合一三信条」。",
+          ui2.forms_section(table, C.fig)))
+
     s = INTROD["intro-method"]
     w(sec(s["id"], s["eyebrow"], s["title"], s["lead"],
           blocks(s["blocks"])
@@ -253,7 +263,7 @@ def build():
                     "感恩": "问 86–129 · 十诫作感恩之规，主祷文作感恩之息"}[d["part"]]
             w('<div class="part-div"><div><div class="n">%s</div><h2>%s</h2></div>'
               '<div class="zh">%s</div></div>' % (PL[d["part"]], E(d["part"]), E(desc)))
-        w(render_ld(d))
+        w(ui2.render_ld(d, A, PL))
 
     # ---------- 跨主日专题 ----------
     w('<div class="part-div"><div><div class="n">TOPICA</div><h2>跨主日专题</h2></div>'
@@ -374,7 +384,7 @@ def build():
       'SOLI DEO GLORIA</div>')
     w('</main></div><button id="tocOpen">目录</button>'
       '<button id="toTop" aria-label="回到顶部">↑</button>')
-    w('<script>%s</script></body></html>' % JS)
+    w('<script>%s%s</script></body></html>' % (JS, ui2.JS2))
     return o.getvalue()
 
 

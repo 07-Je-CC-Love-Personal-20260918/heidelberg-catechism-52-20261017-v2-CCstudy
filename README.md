@@ -3,8 +3,16 @@
 欧陆改革宗（三项联合信条）视角的《海德堡要理问答》（Catechesis Palatina, 1563）全书解读，
 输出为一个**完全自含的单页 HTML**：无外部字体、无 CDN、无构建依赖，离线可用，手机与桌面自适应。
 
-- 线上（Netlify）：https://heidelberg-catechism-52.netlify.app
-- 线上（GitHub Pages）：https://07-je-cc-love-personal-20260918.github.io/heidelberg-catechism-52/
+**v2 · 2026-10-17** —— 平铺自适应网格、毛玻璃、图标与入场动画、信经背诵室、三项联合信条深度对比
+
+| 部署 | 链接 |
+|---|---|
+| GitHub Pages | https://07-je-cc-love-personal-20260918.github.io/heidelberg-catechism-52-20261017-v2-CCstudy/ |
+| Surge | https://heidelberg-catechism-52-20261017-v2-ccstudy.surge.sh |
+| Netlify | https://heidelberg-catechism-52-20261017-v2-ccstudy.netlify.app |
+| 仓库 | https://github.com/07-Je-CC-Love-Personal-20260918/heidelberg-catechism-52-20261017-v2-CCstudy |
+
+推送 `main` 后 Actions 自动重建并部署 Surge（需仓库密钥 `SURGE_TOKEN`）与 Netlify（需 `NETLIFY_AUTH_TOKEN`、`NETLIFY_SITE_ID`）；GitHub Pages 从 `main` 根目录发布。
 
 ## 内容
 
