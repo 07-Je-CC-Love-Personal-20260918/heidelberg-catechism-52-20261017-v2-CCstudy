@@ -3,11 +3,19 @@
 欧陆改革宗（三项联合信条）视角的《海德堡要理问答》（Catechesis Palatina, 1563）全书解读，
 输出为一个**完全自含的单页 HTML**：无外部字体、无 CDN、无构建依赖，离线可用，手机与桌面自适应。
 
+**v3 更新 · 2026-10-17**（仓库沿用 v2 名称）
+- 三大普世信经与三项联合信条正文**一字不差**取自 [ccifellowship.org](https://ccifellowship.org)：129 问答（含脚注号与经文出处）、比利时信条 37 条、多特信经四项教义（含错谬反驳）、使徒／尼西亚／亚他那修信经
+- 新增 **原文阅读室** `texts.html`：四部文献全文、可隐藏目录、全文查找、字号切换，与解读页双向跳转
+- 重点突出：每主日顶部「重点」与「记忆钥匙」高亮条，「难点 · 误读警示」前置；正典定位／原文钥词等次要层收进「延伸阅读」
+- 字号整体放大（正文 18.5px，手机 17.5px），标签与图注不小于 12.5px
+- 新可视化：129 问四部分比例动态环图、52 句重点记忆墙、三项联合信条数据卡
+
 **v2 · 2026-10-17** —— 平铺自适应网格、毛玻璃、图标与入场动画、信经背诵室、三项联合信条深度对比
 
 | 部署 | 链接 |
 |---|---|
 | GitHub Pages | https://07-je-cc-love-personal-20260918.github.io/heidelberg-catechism-52-20261017-v2-CCstudy/ |
+| 原文阅读室 | 以上任一站点加 `/texts.html` |
 | Surge | https://heidelberg-catechism-52-20261017-v2-ccstudy.surge.sh |
 | Netlify | https://heidelberg-catechism-52-20261017-v2-ccstudy.netlify.app |
 | 仓库 | https://github.com/07-Je-CC-Love-Personal-20260918/heidelberg-catechism-52-20261017-v2-CCstudy |
@@ -32,8 +40,11 @@
 ## 目录结构
 
 ```
+texts.html          # 构建产物：原文阅读室（ccifellowship.org 全文）
 index.html          # 构建产物，直接可部署（Pages / Netlify 的站点根文件）
 src/
+  cci_text.py       # 自动生成：ccifellowship.org 原文（勿手改）
+  ui3.py            # v3 层：原文问答、重点/难点、记忆墙、阅读室页面
   data.py           # 52 主日全部内容（问答、解读、原文钥词…）
   creeds.py         # 三大普世信经 + 三项联合信条
   story.py          # 圣经神学与圣约神学章节、预表链条、正典主题
@@ -64,7 +75,7 @@ cd src && python3 build.py     # 产出 ../index.html，无第三方依赖
 
 ## 说明
 
-问答中译为便于诵读与理解所作的简明译文；解读依欧陆改革宗正统神学立场撰写，
-供讲道预备、要理教育与个人背诵之用。正式引用与教会公用，请以贵会所采纳的标准中译本为准。
+信经与信条正文引自 ccifellowship.org（`tools/cci_parse.py` 解析抓取结果生成 `src/cci_text.py`）；
+解读依欧陆改革宗正统神学立场撰写，供讲道预备、要理教育与个人背诵之用。
 
 SOLI DEO GLORIA

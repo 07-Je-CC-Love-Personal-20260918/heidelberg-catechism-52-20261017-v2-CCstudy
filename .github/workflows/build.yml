@@ -25,13 +25,13 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if ! git diff --quiet -- index.html; then
-            git add index.html
+          if ! git diff --quiet -- index.html texts.html; then
+            git add index.html texts.html
             git commit -m "chore: rebuild index.html [skip ci]"
             git push
           fi
       - name: Stage site
-        run: mkdir -p _site && cp index.html _site/ && echo "${SITE}.surge.sh" > _site/CNAME_SURGE
+        run: mkdir -p _site && cp index.html texts.html _site/ && echo "${SITE}.surge.sh" > _site/CNAME_SURGE
       - name: Deploy to Surge
         env:
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
