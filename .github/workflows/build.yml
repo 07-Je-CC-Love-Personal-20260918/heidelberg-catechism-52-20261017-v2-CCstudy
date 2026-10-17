@@ -35,8 +35,12 @@ jobs:
       - name: Deploy to Surge
         env:
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
         if: env.SURGE_TOKEN != ''
-        run: npx --yes surge ./_site "${SITE}.surge.sh" --token "$SURGE_TOKEN"
+        run: |
+          npm i -g surge >/dev/null 2>&1
+          for i in 1 2 3; do surge ./_site "${SITE}.surge.sh" && break; echo "retry $i"; sleep 10; done
+          curl -fsS "https://${SITE}.surge.sh/texts.html" -o /dev/null && echo "surge OK"
       - name: Deploy to Netlify
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN_20260918 }}
