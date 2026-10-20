@@ -3,6 +3,7 @@
 import html, re
 from cci_text import HC, BC, COD, CREEDS, INTRO
 from ui2 import ic, E
+import ui4
 
 SRC = "https://ccifellowship.org"
 FN = re.compile(r'(?<=[^\d\s:：\-第,，(（])(\d{1,2})(?![章节条项年月日世号次篇:：\d])(?=[，。；、：”！？）」\s]|$|[\u4e00-\u9fff])')
@@ -42,11 +43,14 @@ def render_ld(d, A, PL):
     terms = ''.join('<div class="term"><span class="%s">%s</span><span class="tgloss">%s%s</span></div>'
                     % (cls, E(t), '' if tr == "—" else '<i>%s</i>' % E(tr), E(gl))
                     for cls, t, tr, gl in d["terms"])
-    ana = ''.join('<p class="pt"><b>%s。</b>%s</p>' % (E(t), E(x)) for t, x in d["analysis"])
-    ang = ''.join('<p class="pt"><b>%s。</b>%s</p>' % (E(t), E(x)) for t, x in d["angles"])
+    _pt = lambda L: ''.join('<p class="pt"><b>%s。</b>%s</p>' % (E(t), E(x)) for t, x in L)
+    ana = _pt(d["analysis"][:2]) + ('<details class="ana-more"><summary>＋ 再看 %d 点</summary>%s</details>'
+                                    % (len(d["analysis"]) - 2, _pt(d["analysis"][2:])) if len(d["analysis"]) > 2 else '')
+    ang = _pt(d["angles"])
+    emo, app = ui4.EMO[d["n"] - 1], ui4.APP[d["n"] - 1]
     verses = ''.join('<span class="vchip">%s</span>' % E(v.strip()) for v in d["verses"].split("；") if v.strip())
     s = " ".join([d["title"], d["theme"], d["part"], d["core"], d["logic"], d["memo"], d["caution"],
-                  d["context"], d["canon"], d["confess"], d["verses"],
+                  d["context"], d["canon"], d["confess"], d["verses"], ui4.APP[d["n"] - 1],
                   " ".join(q + a for _, q, a in d["qas"]),
                   " ".join(t + x for t, x in d["analysis"] + d["angles"]),
                   " ".join(t + tr + gl for _, t, tr, gl in d["terms"]), "主日%d LD%d" % (d["n"], d["n"])])
@@ -58,9 +62,10 @@ def render_ld(d, A, PL):
 <div class="ld-h"><div class="ld-no">{d['n']}</div><div class="ld-ht"><h3>{E(d['title'])}</h3>
 <div class="ld-meta"><span>主日 {d['n']}</span><span>{qn}</span><span class="pp">{E(d['part'])} · {PL[d['part']]}</span><span>{E(d['theme'])}</span></div>
 <div class="qpos" title="在 129 问中的位置"><i style="left:{left:.2f}%;width:{wid:.2f}%"></i></div></div>
-<label class="chk"><input type="checkbox" data-n="{d['n']}">已背熟</label></div>
+<div class="ld-emo" aria-hidden="true">{emo}</div><label class="chk"><input type="checkbox" data-n="{d['n']}">已背熟</label></div>
 <div class="keyline"><div class="kb kb-core"><span class="badge b-key">{ic("core", "ic s")}重点</span><p>{E(d['core'])}</p></div>
-<div class="kb kb-memo"><span class="badge b-memo">{ic("key", "ic s")}记忆钥匙</span><p>{E(d['memo'])}</p></div></div>
+<div class="kb kb-memo"><span class="badge b-memo">{ic("key", "ic s")}记忆钥匙</span><p>{E(d['memo'])}</p></div>
+<div class="kb kb-app"><span class="badge b-app">{ic("flow", "ic s")}今日应用</span><p>{E(app)}</p></div></div>
 <div class="ld-g">
  <div class="ld-main">{qas}<div class="srcnote">问答原文引自 <a href="{SRC}/books/book-of-praise/confessions/heidelberg-catechism" target="_blank" rel="noopener">ccifellowship.org</a></div></div>
  <div class="ld-side">
@@ -78,7 +83,7 @@ def render_ld(d, A, PL):
  {tile("arc", "正典定位", '<p>%s</p>' % E(d['canon']))}
  {tile("lang", "原文钥词", '<div class="terms">%s</div>' % terms)}
  {tile("eye", "多视角对照", ang, "wide")}
- {tile("link", "信条互参", '<p class="cf">%s</p>' % E(d['confess']))}
+ {tile("link", "信条互参", '<p class="cf">%s</p>' % ui4.confess_links(d['confess']))}
 </div></details></section>'''
 
 
@@ -143,8 +148,8 @@ def donut(LDS):
 
 
 def memory_wall(LDS):
-    cells = ''.join('<a class="mw %s" href="#ld%d"><span class="mwn">%d</span><b>%s</b><i>%s</i></a>'
-                    % (d["key"], d["n"], d["n"], E(d["title"]), E(d["core"])) for d in LDS)
+    cells = ''.join('<a class="mw %s" href="#ld%d"><span class="mwe">%s</span><span class="mwn">%d</span><b>%s</b><i>%s</i><u>→ %s</u></a>'
+                    % (d["key"], d["n"], ui4.EMO[d["n"] - 1], d["n"], E(d["title"]), E(d["core"]), E(ui4.APP[d["n"] - 1])) for d in LDS)
     return ('<figure class="fig"><figcaption>图 · 52 句重点记忆墙（每主日一句本质核心；颜色＝困苦／拯救／感恩，点按跳转）</figcaption>'
             '<div class="mwall">%s</div></figure>' % cells)
 
@@ -180,8 +185,8 @@ def texts_page(CSS, CSS2, ICONS, LDS, PL):
             last = d["part"]
             body.append('<div class="tpart %s">%s · %s</div>' % (d["key"], E(d["part"]), PL[d["part"]]))
         nav.append('<a href="#hc%d"><span class="no">%d</span>%s</a>' % (d["n"], d["n"], E(d["title"])))
-        qa = ''.join('<div class="tqa"><div class="tq"><b>%d．</b>问：%s</div><div class="ta">答：%s</div>%s</div>'
-                     % (n, E(HC[n]["q"]), fn_html(HC[n]["a"]), refs_html(HC[n]["refs"])) for n, _, _ in d["qas"])
+        qa = ''.join('<div class="tqa" id="q%d"><div class="tq"><b>%d．</b>问：%s</div><div class="ta">答：%s</div>%s</div>'
+                     % (n, n, E(HC[n]["q"]), fn_html(HC[n]["a"]), refs_html(HC[n]["refs"])) for n, _, _ in d["qas"])
         body.append('<article class="tx %s" id="hc%d"><h3><span class="tno">主日 %d</span>%s'
                     '<a class="tback" href="index.html#ld%d">解读 ↗</a></h3>%s</article>'
                     % (d["key"], d["n"], d["n"], E(d["title"]), d["n"], qa))

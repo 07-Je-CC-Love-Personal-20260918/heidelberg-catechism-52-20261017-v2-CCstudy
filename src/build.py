@@ -12,6 +12,7 @@ from topics import TOPICS, GERMAN_WORDS
 import charts2 as C2
 import ui2
 import ui3
+import ui4
 ui3.patch_lds(LDS)
 
 E = lambda s: html.escape(str(s), quote=False)
@@ -107,7 +108,7 @@ def build():
       '%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E'
       '%3Crect width=%2732%27 height=%2732%27 fill=%27%231F3864%27/%3E'
       '%3Ctext x=%2716%27 y=%2723%27 font-size=%2720%27 text-anchor=%27middle%27 fill=%27%23F6F2E8%27%3EH%3C/text%3E%3C/svg%3E">')
-    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3, ui2.ICONS))
+    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3 + ui4.CSS4, ui2.ICONS))
 
     # topbar
     w('<div class="topbar"><div class="tb">'
@@ -150,7 +151,7 @@ def build():
         if d["part"] != last:
             last = d["part"]
             w('<div class="toc-h">%s · %s</div>' % (E(d["part"]), PL[d["part"]]))
-        w('<a href="#ld%d" data-n="%d"><span class="no">%d</span>%s</a>' % (d["n"], d["n"], d["n"], E(d["title"])))
+        w('<a href="#ld%d" data-n="%d"><span class="no">%d</span><span class="emo">%s</span>%s</a>' % (d["n"], d["n"], d["n"], ui4.EMO[d["n"] - 1], E(d["title"])))
     w('<div class="toc-h">跨主日专题 · TOPICA</div>')
     for t in TOPICS:
         w('<a href="#%s"><span class="no">%s</span>%s</a>'
@@ -174,7 +175,7 @@ def build():
     for b_, t in [("1563", "海德堡首版"), ("129", "问答"), ("52", "主日"), ("3", "困苦·拯救·感恩"),
                   ("10", "总论专章"), ("7", "跨主日专题"), ("12", "附录"), ("%d" % len(QUIZ), "自测题")]:
         w('<div><b>%s</b>%s</div>' % (b_, t))
-    w('</div></header><div id="sNote" class="lead hidden" style="margin-top:20px"></div>')
+    w('</div>' + ui4.three_acts() + '</header><div id="sNote" class="lead hidden" style="margin-top:20px"></div>')
 
     # ---------- 总论 ----------
     s = INTROD["intro-why"]
@@ -397,6 +398,6 @@ if __name__ == "__main__":
     h = build()
     open(out, "w", encoding="utf-8").write(h)
     print("bytes:", len(h.encode("utf-8")), "->", out)
-    t = ui3.texts_page(CSS, ui2.CSS2, ui2.ICONS, LDS, PL)
+    t = ui3.texts_page(CSS, ui2.CSS2 + ui4.CSS4, ui2.ICONS, LDS, PL)
     open(os.path.join(os.path.dirname(out), "texts.html"), "w", encoding="utf-8").write(t)
     print("texts.html bytes:", len(t.encode("utf-8")))
