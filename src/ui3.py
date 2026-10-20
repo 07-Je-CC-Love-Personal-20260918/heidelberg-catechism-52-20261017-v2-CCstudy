@@ -6,7 +6,7 @@ from ui2 import ic, E
 import ui4
 
 SRC = "https://ccifellowship.org"
-FN = re.compile(r'(?<=[^\d\s:：\-第,，(（])(\d{1,2})(?![章节条项年月日世号次篇:：\d])(?=[，。；、：”！？）」\s]|$|[\u4e00-\u9fff])')
+FN = re.compile(r'(?<=[^\d\s:：\-第,，(（])(\d{1,2})(?![章节条项年月日世号次篇:\d])(?=[，。；、：”！？）」\s]|$|[\u4e00-\u9fff])')
 
 
 def strip_fn(a):
@@ -232,7 +232,7 @@ def texts_page(CSS, CSS2, ICONS, LDS, PL):
             '包括其脚注编号（以上标显示）与经文出处。只作排版，不改一字。</p>%s</header>%s'
             '<footer class="srcfoot">文本来源：<a href="%s">ccifellowship.org</a> · 排版：海德堡 52 主日学习站<span class="vstamp">%s</span></footer>'
             '</main></div><script>%s</script></body></html>'
-            % (CSS, CSS2, CSS3, ICONS, ''.join(nav), SRC, forms_stats(), ''.join(body), SRC, __import__('ui5').VERSION, TEXTS_JS + __import__('ui5').JS5))
+            % (CSS, CSS2, CSS3, ICONS, ''.join(nav), SRC, forms_stats(), ''.join(body), SRC, __import__('ui5').VERSION, TEXTS_JS + __import__('ui5').JS5 + __import__('ui9').JS9))
 
 
 TEXTS_JS = r"""

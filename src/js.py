@@ -95,11 +95,9 @@ function spy(){
       if(a.offsetTop<side.scrollTop||a.offsetTop>side.scrollTop+side.clientHeight-70)
         side.scrollTop=a.offsetTop-side.clientHeight/2;}
   }
-  var h=d.documentElement.scrollHeight-window.innerHeight;
-  d.getElementById('prog').style.width=(h>0?window.scrollY/h*100:0)+'%';
   d.getElementById('toTop').classList.toggle('show',window.scrollY>700);
 }
-window.addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(spy);}},{passive:true});
+var lastSpy=0,spyT=null;window.addEventListener('scroll',function(){var n=Date.now();if(n-lastSpy>110){lastSpy=n;if(!tick){tick=true;requestAnimationFrame(spy);}}clearTimeout(spyT);spyT=setTimeout(function(){if(!tick){tick=true;requestAnimationFrame(spy);}},140);},{passive:true});
 spy();
 
 /* ---- reveal animations (stop when off-screen to save power) ---- */
@@ -135,7 +133,7 @@ d.getElementById('resetBtn').onclick=function(){
   d.getElementById('score').textContent='';
 };
 
-d.getElementById('toTop').onclick=function(){window.scrollTo({top:0,behavior:'smooth'});};
+d.getElementById('toTop').onclick=function(){if(window.__lenis)window.__lenis.scrollTo(0,{duration:1.1});else window.scrollTo({top:0,behavior:'smooth'});};
 d.getElementById('printBtn').onclick=function(){
   d.querySelectorAll('.qa.open').forEach(function(q){q.classList.remove('open');});
   b.classList.remove('drill');drill.classList.remove('on');drill.textContent='背诵';

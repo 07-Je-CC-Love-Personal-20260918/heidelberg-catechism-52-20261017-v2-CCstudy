@@ -51,3 +51,14 @@ jobs:
             ID=$(netlify api createSite --data "{\"body\":{\"name\":\"$SITE\"}}" | python3 -c "import json,sys;print(json.load(sys.stdin)['id'])")
           fi
           netlify deploy --prod --dir=_site --site "$ID"
+      - name: Release snapshot (恢复点)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          V=$(tr -d '[:space:]' < VERSION)
+          TAG="${V#*-}-${V%%-*}"
+          if gh release view "$TAG" >/dev/null 2>&1; then echo "release $TAG exists"; else
+            NOTES=$(awk "/^\*\*${V#*-} /{f=1} f&&/^\*\*v[0-9]+ /&&!/^\*\*${V#*-} /{exit} f" README.md)
+            gh release create "$TAG" --target "$GITHUB_SHA" --title "$TAG 恢复点 · heidelberg-catechism-52-$V-CCstudy" \
+              --notes "$(printf 'heidelberg-catechism-52-%s-CCstudy\n\nSurge: https://%s.surge.sh\nNetlify: https://%s.netlify.app\n\n%s' "$V" "$SITE" "$SITE" "$NOTES")"
+          fi

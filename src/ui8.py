@@ -68,17 +68,17 @@ def mark(html):
 
 
 def legend():
-    chips = ''.join('<span class="mkl %s">%s <mark class="mk %s">%s</mark></span>' % (c, e, c, n) for c, e, n, ws in CATS)
+    chips = ''.join('<span class="mkl">%s <mark class="mk %s">%s</mark></span>' % (e, c, n) for c, e, n, ws in CATS)
     return ('<div class="mklegend glass" id="mkLegend"><b>🎨 颜色记忆法</b>%s'
             '<span class="mkl"><span class="mk-v">罗 8:28</span> 经文</span>'
-            '<button class="btn" id="mkBtn" type="button">标记：开</button></div>' % chips)
+            '<button class="btn" id="mkBtn" type="button">标记：开</button></div><!--MKSTAT-->' % chips)
 
 
 CSS8 = r"""
 /* ===== v8：主题词记忆标记 ===== */
 mark.mk{background:none;color:inherit;padding:0 1px;border-radius:3px;font-weight:600;transition:background .25s,color .25s}
 .mk-god{color:#7048C0;background:linear-gradient(transparent 62%,rgba(112,72,192,.16) 62%)!important}
-.mk-sin{color:#C21F35;text-decoration:underline wavy rgba(194,31,53,.55);text-underline-offset:4px;text-decoration-thickness:1.5px}
+
 .mk-chr{color:#1D4FBF;background:linear-gradient(transparent 55%,rgba(36,87,197,.17) 55%)!important}
 .mk-spi{color:#0B8475;border-bottom:2px dotted rgba(11,148,132,.7)}
 .mk-cov{color:#2E7D32;background:rgba(46,125,50,.10)!important;box-shadow:inset 0 -1px 0 rgba(46,125,50,.5)}

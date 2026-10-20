@@ -17,6 +17,7 @@ import ui5
 import ui6
 import ui7
 import ui8
+import ui9
 ui7.patch(C, C2)
 ui3.patch_lds(LDS)
 
@@ -114,7 +115,7 @@ def build():
       '%3Crect width=%2732%27 height=%2732%27 fill=%27%231F3864%27/%3E'
       '%3Ctext x=%2716%27 y=%2723%27 font-size=%2720%27 text-anchor=%27middle%27 fill=%27%23F6F2E8%27%3EH%3C/text%3E%3C/svg%3E">')
     w('<script>if("IntersectionObserver" in window)document.documentElement.classList.add("io")</script>')
-    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3 + ui4.CSS4 + ui5.CSS5 + ui6.CSS6 + ui7.CSS7 + ui8.CSS8, ui2.ICONS))
+    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3 + ui4.CSS4 + ui5.CSS5 + ui6.CSS6 + ui7.CSS7 + ui8.CSS8 + ui9.CSS9, ui2.ICONS))
 
     # topbar
     w('<div class="topbar"><div class="tb">'
@@ -400,15 +401,16 @@ def build():
       'SOLI DEO GLORIA<span class="vstamp">' + ui5.VERSION + '</span></div>')
     w('</main></div><button id="tocOpen">目录</button>'
       '<button id="toTop" aria-label="回到顶部">↑</button>')
-    w('<script>%s%s</script></body></html>' % (JS, ui2.JS2 + ui5.JS5 + ui6.JS6 + ui7.JS7 + ui8.JS8))
+    w('<script>%s%s</script></body></html>' % (JS, ui2.JS2 + ui5.JS5 + ui6.JS6 + ui7.JS7 + ui8.JS8 + ui9.JS9))
     return o.getvalue()
 
 
 if __name__ == "__main__":
     out = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "index.html")
-    h = ui8.mark(ui7.add_icons(build()))
+    h = ui9.enhance(ui8.mark(ui7.add_icons(build())))
+    h = h.replace('<!--MKSTAT-->', ui9.mark_stats(h, ui8.CATS), 1)
     open(out, "w", encoding="utf-8").write(h)
     print("bytes:", len(h.encode("utf-8")), "->", out)
-    t = ui3.texts_page(CSS, ui2.CSS2 + ui4.CSS4 + ui5.CSS5, ui2.ICONS, LDS, PL)
+    t = ui3.texts_page(CSS, ui2.CSS2 + ui4.CSS4 + ui5.CSS5 + ui9.CSS9, ui2.ICONS, LDS, PL)
     open(os.path.join(os.path.dirname(out), "texts.html"), "w", encoding="utf-8").write(t)
     print("texts.html bytes:", len(t.encode("utf-8")))
