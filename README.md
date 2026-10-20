@@ -1,32 +1,43 @@
 # 海德堡要理问答 · 52 主日全景解读
 
-欧陆改革宗（三项联合信条）视角的《海德堡要理问答》（Catechesis Palatina, 1563）全书解读，
-输出为一个**完全自含的单页 HTML**：无外部字体、无 CDN、无构建依赖，离线可用，手机与桌面自适应。
+> **版本标识：`heidelberg-catechism-52-20261020-v5-CCstudy`**（主题-日期-版本号-CCstudy）
+> 仓库与域名不含版本号；当前版本号与日期显示在网页页脚。
 
-**v4 更新 · 2026-10-20**
-- 52 主日各配记忆图标（目录、卡片、记忆墙同步）；每主日新增「今日应用」一句
-- 首屏「困苦 → 拯救 → 感恩」三幕动态流程图；渐变标题、鲜明四色配色（明暗主题同步）
-- 神学剖析默认只显示最核心两点，其余折叠；信条互参（BC／CoD／问）直接链接到原文阅读室对应条目
-- Surge 由 Actions 自动部署（仓库密钥 SURGE_TOKEN／SURGE_LOGIN）
-
-**v3 更新 · 2026-10-17**（仓库沿用 v2 名称）
-- 三大普世信经与三项联合信条正文**一字不差**取自 [ccifellowship.org](https://ccifellowship.org)：129 问答（含脚注号与经文出处）、比利时信条 37 条、多特信经四项教义（含错谬反驳）、使徒／尼西亚／亚他那修信经
-- 新增 **原文阅读室** `texts.html`：四部文献全文、可隐藏目录、全文查找、字号切换，与解读页双向跳转
-- 重点突出：每主日顶部「重点」与「记忆钥匙」高亮条，「难点 · 误读警示」前置；正典定位／原文钥词等次要层收进「延伸阅读」
-- 字号整体放大（正文 18.5px，手机 17.5px），标签与图注不小于 12.5px
-- 新可视化：129 问四部分比例动态环图、52 句重点记忆墙、三项联合信条数据卡
-
-**v2 · 2026-10-17** —— 平铺自适应网格、毛玻璃、图标与入场动画、信经背诵室、三项联合信条深度对比
+欧陆改革宗（三项联合信条）视角的《海德堡要理问答》（Catechesis Palatina, 1563）全书解读。
+信经与信条正文一字不差引自 [ccifellowship.org](https://ccifellowship.org)。
 
 | 部署 | 链接 |
 |---|---|
-| GitHub Pages | https://07-je-cc-love-personal-20260918.github.io/heidelberg-catechism-52-20261017-v2-CCstudy/ |
-| 原文阅读室 | 以上任一站点加 `/texts.html` |
-| Surge | https://heidelberg-catechism-52-20261017-v2-ccstudy.surge.sh |
-| Netlify | https://heidelberg-catechism-52-20261017-v2-ccstudy.netlify.app |
-| 仓库 | https://github.com/07-Je-CC-Love-Personal-20260918/heidelberg-catechism-52-20261017-v2-CCstudy |
+| GitHub Pages | https://07-je-cc-love-personal-20260918.github.io/heidelberg-catechism-52-CCstudy/ |
+| Surge | https://heidelberg-catechism-52-ccstudy.surge.sh |
+| Netlify | https://heidelberg-catechism-52-ccstudy.netlify.app |
+| 原文阅读室 | 以上任一站点 + `/texts.html` |
+| 仓库 | https://github.com/07-Je-CC-Love-Personal-20260918/heidelberg-catechism-52-CCstudy |
 
-推送 `main` 后 Actions 自动重建并部署 Surge（需仓库密钥 `SURGE_TOKEN`）与 Netlify（组织密钥 `NETLIFY_AUTH_TOKEN_20260918`）；GitHub Pages 从 `main` 根目录发布。
+推送 `main` 后 GitHub Actions 自动重建并部署三站（仓库密钥 `SURGE_TOKEN`／`SURGE_LOGIN`，组织密钥 `NETLIFY_AUTH_TOKEN_20260918`）。
+
+## 恢复点（Releases / Tags）
+
+| 标记 | 日期 | 说明 |
+|---|---|---|
+| `v5-20261020` | 2026-10-20 | 目录精确跳转、去版本号改名、信条互参热力图、紧凑排版 |
+| `v4-20261020` | 2026-10-20 | 改名前最后版本：记忆图标、今日应用、三幕流程、鲜明配色 |
+
+恢复：`git checkout <标记>` 后推送到 `main`，或在 Releases 页下载源码包。
+
+## 更新说明
+
+**v5 · 2026-10-20**
+- 目录链接全部修复并逐一核对（主页 85 个、原文页 96 个，电脑与手机共 362 次点击测试全部落点准确）：动态顶栏高度、二次校正滚动、长距离先瞬移再平滑、移动端抽屉统一、去掉导致落点漂移的 content-visibility
+- 仓库更名 `heidelberg-catechism-52-CCstudy`，三站域名同步去掉日期与版本号；版本号移至页脚
+- 新增「信条互参热力图」：52 主日引用比利时信条 37 条与多特信经四项教义的分布，点按直达原文
+- 排版收紧：减少章节与卡片间空白
+
+**v4 · 2026-10-20** — 52 主日记忆图标、今日应用、三幕动态流程图、鲜明四色配色、信条互参直链原文
+
+**v3 · 2026-10-17** — ccifellowship.org 原文（129 问答含脚注与经文出处、比利时信条、多特信经、三大信经）、原文阅读室 `texts.html`、重点／难点前置、大字号、记忆墙、比例环图
+
+**v2 · 2026-10-17** — 平铺自适应网格、毛玻璃、图标与入场动画、信经背诵室、三项联合信条深度对比
 
 ## 内容
 
@@ -50,6 +61,8 @@ texts.html          # 构建产物：原文阅读室（ccifellowship.org 全文�
 index.html          # 构建产物，直接可部署（Pages / Netlify 的站点根文件）
 src/
   cci_text.py       # 自动生成：ccifellowship.org 原文（勿手改）
+  ui4.py            # v4 层：记忆图标、今日应用、三幕流程、配色
+  ui5.py            # v5 层：精确锚点导航、热力图、版本号
   ui3.py            # v3 层：原文问答、重点/难点、记忆墙、阅读室页面
   data.py           # 52 主日全部内容（问答、解读、原文钥词…）
   creeds.py         # 三大普世信经 + 三项联合信条

@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 env:
-  SITE: heidelberg-catechism-52-20261017-v2-ccstudy
+  SITE: heidelberg-catechism-52-ccstudy
 
 jobs:
   build:

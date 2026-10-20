@@ -13,6 +13,7 @@ import charts2 as C2
 import ui2
 import ui3
 import ui4
+import ui5
 ui3.patch_lds(LDS)
 
 E = lambda s: html.escape(str(s), quote=False)
@@ -108,7 +109,7 @@ def build():
       '%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E'
       '%3Crect width=%2732%27 height=%2732%27 fill=%27%231F3864%27/%3E'
       '%3Ctext x=%2716%27 y=%2723%27 font-size=%2720%27 text-anchor=%27middle%27 fill=%27%23F6F2E8%27%3EH%3C/text%3E%3C/svg%3E">')
-    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3 + ui4.CSS4, ui2.ICONS))
+    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3 + ui4.CSS4 + ui5.CSS5, ui2.ICONS))
 
     # topbar
     w('<div class="topbar"><div class="tb">'
@@ -214,7 +215,7 @@ def build():
           ui3.readers_section()))
     w(sec("forms-cmp", "总论 IV·B", "三项联合信条深度对比：为什么需要三份",
           "比利时信条、海德堡要理问答、多特信经：三个地点、三场危机、三种文体，最终在多特被一同采纳为「合一三信条」。",
-          ui3.forms_stats() + ui2.forms_section(table, C.fig)))
+          ui3.forms_stats() + ui2.forms_section(table, C.fig) + ui5.heatmap(LDS, E)))
 
     s = INTROD["intro-method"]
     w(sec(s["id"], s["eyebrow"], s["title"], s["lead"],
@@ -386,10 +387,10 @@ def build():
       '本页三大信经与三项联合信条正文一字不差引自 <a href="https://ccifellowship.org">ccifellowship.org</a>（全文见<a href="texts.html">原文阅读室</a>）；'
       '解读部分依欧陆改革宗正统神学立场撰写，供讲道预备、要理教育与个人背诵之用。<br>'
       'BC＝比利时信条　CoD＝多特信经　WCF＝威斯敏斯特信条　WSC/WLC＝威斯敏斯特小／大要理问答<br><br>'
-      'SOLI DEO GLORIA</div>')
+      'SOLI DEO GLORIA<span class="vstamp">' + ui5.VERSION + '</span></div>')
     w('</main></div><button id="tocOpen">目录</button>'
       '<button id="toTop" aria-label="回到顶部">↑</button>')
-    w('<script>%s%s</script></body></html>' % (JS, ui2.JS2))
+    w('<script>%s%s</script></body></html>' % (JS, ui2.JS2 + ui5.JS5))
     return o.getvalue()
 
 
@@ -398,6 +399,6 @@ if __name__ == "__main__":
     h = build()
     open(out, "w", encoding="utf-8").write(h)
     print("bytes:", len(h.encode("utf-8")), "->", out)
-    t = ui3.texts_page(CSS, ui2.CSS2 + ui4.CSS4, ui2.ICONS, LDS, PL)
+    t = ui3.texts_page(CSS, ui2.CSS2 + ui4.CSS4 + ui5.CSS5, ui2.ICONS, LDS, PL)
     open(os.path.join(os.path.dirname(out), "texts.html"), "w", encoding="utf-8").write(t)
     print("texts.html bytes:", len(t.encode("utf-8")))
