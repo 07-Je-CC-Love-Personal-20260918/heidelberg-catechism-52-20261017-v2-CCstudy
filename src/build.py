@@ -16,6 +16,7 @@ import ui4
 import ui5
 import ui6
 import ui7
+import ui8
 ui7.patch(C, C2)
 ui3.patch_lds(LDS)
 
@@ -112,7 +113,8 @@ def build():
       '%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E'
       '%3Crect width=%2732%27 height=%2732%27 fill=%27%231F3864%27/%3E'
       '%3Ctext x=%2716%27 y=%2723%27 font-size=%2720%27 text-anchor=%27middle%27 fill=%27%23F6F2E8%27%3EH%3C/text%3E%3C/svg%3E">')
-    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3 + ui4.CSS4 + ui5.CSS5 + ui6.CSS6 + ui7.CSS7, ui2.ICONS))
+    w('<script>if("IntersectionObserver" in window)document.documentElement.classList.add("io")</script>')
+    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3 + ui4.CSS4 + ui5.CSS5 + ui6.CSS6 + ui7.CSS7 + ui8.CSS8, ui2.ICONS))
 
     # topbar
     w('<div class="topbar"><div class="tb">'
@@ -180,7 +182,7 @@ def build():
     for b_, t in [("1563", "海德堡首版"), ("129", "问答"), ("52", "主日"), ("3", "困苦·拯救·感恩"),
                   ("10", "总论专章"), ("7", "跨主日专题"), ("12", "附录"), ("%d" % len(QUIZ), "自测题")]:
         w('<div><b>%s</b>%s</div>' % (b_, t))
-    w('</div>' + ui4.three_acts() + '</header><div id="sNote" class="lead hidden" style="margin-top:20px"></div>')
+    w('</div>' + ui4.three_acts() + '</header>' + ui8.legend() + '<div id="sNote" class="lead hidden" style="margin-top:20px"></div>')
 
     # ---------- 总论 ----------
     s = INTROD["intro-why"]
@@ -398,13 +400,13 @@ def build():
       'SOLI DEO GLORIA<span class="vstamp">' + ui5.VERSION + '</span></div>')
     w('</main></div><button id="tocOpen">目录</button>'
       '<button id="toTop" aria-label="回到顶部">↑</button>')
-    w('<script>%s%s</script></body></html>' % (JS, ui2.JS2 + ui5.JS5 + ui6.JS6 + ui7.JS7))
+    w('<script>%s%s</script></body></html>' % (JS, ui2.JS2 + ui5.JS5 + ui6.JS6 + ui7.JS7 + ui8.JS8))
     return o.getvalue()
 
 
 if __name__ == "__main__":
     out = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "index.html")
-    h = ui7.add_icons(build())
+    h = ui8.mark(ui7.add_icons(build()))
     open(out, "w", encoding="utf-8").write(h)
     print("bytes:", len(h.encode("utf-8")), "->", out)
     t = ui3.texts_page(CSS, ui2.CSS2 + ui4.CSS4 + ui5.CSS5, ui2.ICONS, LDS, PL)

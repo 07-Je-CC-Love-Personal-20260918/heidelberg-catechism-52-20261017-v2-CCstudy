@@ -153,7 +153,8 @@ def map_europe():
 
 
 def patch(Cm, C2m):
-    Cm.triring, Cm.parabola, Cm.map_europe = triring, parabola, map_europe
+    Cm.triring, Cm.map_europe = triring, map_europe
+    Cm.parabola = lambda: globals()['parabola']()
     C2m.qa_bars = qa_bars
     _old = Cm.fig
 
@@ -210,7 +211,7 @@ CSS7 = r"""
 .in .pline,.fig7 .pline{animation:draw 2.4s .2s ease forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 .pn{fill:var(--paper);stroke:var(--royal);stroke-width:3;animation:pop .5s both;animation-delay:calc(.3s + var(--i)*.18s);transform-box:fill-box;transform-origin:center}
-.pl{font-family:var(--serif);font-size:17px;font-weight:700;fill:var(--ink);animation:fadein .5s both;animation-delay:calc(.4s + var(--i)*.18s)}
+.pl{font-family:var(--serif);font-size:17px;font-weight:700;fill:var(--ink);animation:fade7 .5s both;animation-delay:calc(.4s + var(--i)*.18s)}
 .ldband{fill:color-mix(in srgb,var(--deliver) 14%,transparent)}
 .ldl{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--deliver)}
 .para-steps{display:none;list-style:none;margin:0;padding:0}
@@ -279,3 +280,67 @@ def add_icons(html):
 
 CSS7 += ".h2e{font-size:.85em;margin-right:2px;display:inline-block;animation:bob 4s ease-in-out infinite}.sec h2:has(.h2e)::before{display:none}"
 CSS7 += ".toc a{display:flex;align-items:baseline;gap:5px}.toc a .emo{flex:none;width:1.3em;text-align:center;margin:0}.toc a .no{flex:none;min-width:2.4em!important;margin:0}"
+
+
+def parabola_portrait():
+    """手机竖版：自上而下是时间顺序，向右是降卑深度"""
+    W, H = 360, 600
+    n = len(PARA)
+    X0, X1 = 70, 300
+    pts = [(X0 + dp * (X1 - X0), 70 + i * 50, name, ld, dp) for i, (name, ld, dp) in enumerate(PARA)]
+    d = "M%.0f %.0f " % pts[0][:2]
+    for a, b in zip(pts, pts[1:]):
+        my = (a[1] + b[1]) / 2
+        d += "C%.0f %.0f %.0f %.0f %.0f %.0f " % (a[0], my, b[0], my, b[0], b[1])
+    o = ['<svg viewBox="0 0 %d %d" class="svg7 para7p" role="img" aria-label="基督降卑与升高曲线（竖版）">' % (W, H),
+         '<defs><linearGradient id="pgp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D2283E"/>'
+         '<stop offset=".55" stop-color="#2457C5"/><stop offset="1" stop-color="#DB8A0B"/></linearGradient></defs>',
+         '<rect x="44" y="14" width="80" height="30" rx="15" class="pbadge up"/><text class="ax7p" x="84" y="34" text-anchor="middle">⬆ 升高</text>',
+         '<rect x="246" y="14" width="80" height="30" rx="15" class="pbadge dn"/><text class="ax7p" x="286" y="34" text-anchor="middle">⬇ 降卑</text>',
+         '<line x1="70" y1="52" x2="300" y2="52" class="grat"/>',
+         '<path class="pline2" d="%s" stroke="url(#pgp)"/>' % d]
+    last = None
+    for i, (x, y, name, ld, dp) in enumerate(pts):
+        if ld != last:
+            o.append('<text class="ldl" x="8" y="%.0f">主日%d</text>' % (y + 5, ld))
+            last = ld
+        o.append('<circle class="pn2" cx="%.0f" cy="%.0f" r="7"/>' % (x, y))
+        if x < 200:
+            o.append('<text class="pl2" x="%.0f" y="%.0f">%s</text>' % (x + 14, y + 6, name))
+        else:
+            o.append('<text class="pl2" x="%.0f" y="%.0f" text-anchor="end">%s</text>' % (x - 14, y + 6, name))
+    o.append('</svg>')
+    return ''.join(o)
+
+
+_old_parabola = parabola
+
+
+def parabola():
+    h = _old_parabola()
+    # 去掉旧的阶梯列表，换成竖版 SVG（不依赖动画即可见）
+    import re
+    h = re.sub(r'<ol class="para-steps">.*?</ol>', '<div class="para-port">%s</div>' % parabola_portrait(), h, flags=re.S)
+    return h
+
+
+CSS7 += r"""
+.pline{stroke-dashoffset:0!important;animation:draw7 2.4s .2s ease both}
+@keyframes draw7{from{stroke-dashoffset:2000}}
+.para-port{display:none}
+.para7p{width:100%;height:auto;display:block;max-width:440px;margin:0 auto}
+.pline2{fill:none;stroke-width:5;stroke-linecap:round}
+.pn2{fill:#fff;stroke:#1D3F8F;stroke-width:3}
+.pl2{font-family:var(--serif);font-size:16px;font-weight:700;fill:var(--ink)}
+.ax7p{font-family:var(--sans);font-size:13px;font-weight:700;fill:var(--ink)}
+.pbadge.up{fill:#F6E7C8}.pbadge.dn{fill:#F7D6DA}
+.para7p .ldl{font-size:11.5px}
+@media (max-width:700px){.para-svg{display:none!important}.para-port{display:block}}
+"""
+
+CSS7 += r"""
+/* 稳健显示：只有脚本确认可用（html.io）时才先隐藏再淡入；否则内容直接可见 */
+html:not(.io) .rv,html:not(.io) .act,html:not(.io) .ch,html:not(.io) .ch-a,html:not(.io) .fx{opacity:1!important;transform:none!important}
+"""
+
+CSS7 += "@keyframes fade7{from{opacity:0}}"
