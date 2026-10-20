@@ -40,7 +40,9 @@ if(location.hash){var id=decodeURIComponent(location.hash.slice(1));setTimeout(f
 })();
 """
 
-VERSION = "v5 · 2026-10-20"
+import os as _os
+_V = open(_os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "VERSION")).read().strip()
+VERSION = "%s · %s-%s-%s" % (_V.split("-")[1], _V[:4], _V[4:6], _V[6:8])
 
 CSS5 += r"""
 .sec{padding:26px 0 4px;margin-top:18px}

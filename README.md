@@ -1,7 +1,7 @@
 # 海德堡要理问答 · 52 主日全景解读
 
-> **版本标识：`heidelberg-catechism-52-20261020-v5-CCstudy`**（主题-日期-版本号-CCstudy）
-> 仓库与域名不含版本号；当前版本号与日期显示在网页页脚。
+> **版本标识：`heidelberg-catechism-52-20261020-v6-CCstudy`**（主题-日期-版本号-CCstudy）
+> 仓库名不含版本号；Surge／Netlify 域名为「主题-日期-版本号-CCser」，由根目录 `VERSION` 文件自动生成；版本号同时显示在网页页脚。
 
 欧陆改革宗（三项联合信条）视角的《海德堡要理问答》（Catechesis Palatina, 1563）全书解读。
 信经与信条正文一字不差引自 [ccifellowship.org](https://ccifellowship.org)。
@@ -9,8 +9,8 @@
 | 部署 | 链接 |
 |---|---|
 | GitHub Pages | https://07-je-cc-love-personal-20260918.github.io/heidelberg-catechism-52-CCstudy/ |
-| Surge | https://heidelberg-catechism-52-ccstudy.surge.sh |
-| Netlify | https://heidelberg-catechism-52-ccstudy.netlify.app |
+| Surge | https://heidelberg-catechism-52-20261020-v6-ccser.surge.sh |
+| Netlify | https://heidelberg-catechism-52-20261020-v6-ccser.netlify.app |
 | 原文阅读室 | 以上任一站点 + `/texts.html` |
 | 仓库 | https://github.com/07-Je-CC-Love-Personal-20260918/heidelberg-catechism-52-CCstudy |
 
@@ -20,12 +20,20 @@
 
 | 标记 | 日期 | 说明 |
 |---|---|---|
+| `v6-20261020` | 2026-10-20 | 闪卡速记、域名含版本号（CCser）、VERSION 单一来源 |
 | `v5-20261020` | 2026-10-20 | 目录精确跳转、去版本号改名、信条互参热力图、紧凑排版 |
 | `v4-20261020` | 2026-10-20 | 改名前最后版本：记忆图标、今日应用、三幕流程、鲜明配色 |
 
 恢复：`git checkout <标记>` 后推送到 `main`，或在 Releases 页下载源码包。
 
 ## 更新说明
+
+**v6 · 2026-10-20**
+- 新增「52 主日闪卡速记」：正面图标＋题目，翻面看重点／记忆钥匙／今日应用；←→ 或左右滑动切换、空格翻面、随机抽卡、只练未背熟；52 格进度条与「已背熟」联动
+- Surge／Netlify 域名改为 `heidelberg-catechism-52-<日期>-<版本>-ccser`，由 `VERSION` 文件驱动，每版自动生成新域名、旧版域名保留可回看
+- 页脚版本号同样读取 `VERSION`
+
+**发布新版本**：改 `VERSION`（如 `20261101-v7`）→ 推送 `main` → 三站自动部署，新域名即生效。
 
 **v5 · 2026-10-20**
 - 目录链接全部修复并逐一核对（主页 85 个、原文页 96 个，电脑与手机共 362 次点击测试全部落点准确）：动态顶栏高度、二次校正滚动、长距离先瞬移再平滑、移动端抽屉统一、去掉导致落点漂移的 content-visibility

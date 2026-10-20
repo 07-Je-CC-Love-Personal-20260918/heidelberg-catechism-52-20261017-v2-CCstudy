@@ -14,6 +14,7 @@ import ui2
 import ui3
 import ui4
 import ui5
+import ui6
 ui3.patch_lds(LDS)
 
 E = lambda s: html.escape(str(s), quote=False)
@@ -109,7 +110,7 @@ def build():
       '%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E'
       '%3Crect width=%2732%27 height=%2732%27 fill=%27%231F3864%27/%3E'
       '%3Ctext x=%2716%27 y=%2723%27 font-size=%2720%27 text-anchor=%27middle%27 fill=%27%23F6F2E8%27%3EH%3C/text%3E%3C/svg%3E">')
-    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3 + ui4.CSS4 + ui5.CSS5, ui2.ICONS))
+    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3 + ui4.CSS4 + ui5.CSS5 + ui6.CSS6, ui2.ICONS))
 
     # topbar
     w('<div class="topbar"><div class="tb">'
@@ -134,7 +135,8 @@ def build():
                  ("intro-method", "V", "释经进路：四层读法"),
                  ("intro-map", "VI", "改革宗欧洲：影响流向地图"),
                  ("intro-text", "VII", "文本、版本与要理讲道传统"),
-                 ("compass", "VIII", "思维导图与 52 主日罗盘")]
+                 ("compass", "VIII", "思维导图与 52 主日罗盘"),
+                 ("flash", "VIII·A", "52 主日闪卡速记")]
     APPS = [("ap-munus", "A", "基督三职"), ("ap-ordo", "B", "救恩次序与动态链"),
             ("ap-sac", "C", "圣餐四立场"), ("ap-dec", "D", "十诫总表"),
             ("ap-lp", "E", "主祷文六求"), ("ap-keys", "F", "教会纪律流程"),
@@ -257,6 +259,10 @@ def build():
           + C.fig('图 · 52 主日全景罗盘（点按跳转；勾选「已背熟」后变金色，已背 <b id="doneCount">0</b> / 52）',
                   '<div class="grid52">%s</div><div class="legend">%s'
                   '<span><i style="background:var(--brass)"></i>已背熟</span></div>' % (cells, leg))))
+
+    w(sec("flash", "总论 VIII·A", "52 主日闪卡速记",
+          "正面只给图标与题目，先自己说出本质核心，再翻面核对「重点 · 记忆钥匙 · 今日应用」。勾选过「已背熟」的主日在下方进度条显示为金色，可只练未背熟的。",
+          ui6.flashcards(LDS, E)))
 
     # ---------- 52 主日 ----------
     last = None
@@ -390,7 +396,7 @@ def build():
       'SOLI DEO GLORIA<span class="vstamp">' + ui5.VERSION + '</span></div>')
     w('</main></div><button id="tocOpen">目录</button>'
       '<button id="toTop" aria-label="回到顶部">↑</button>')
-    w('<script>%s%s</script></body></html>' % (JS, ui2.JS2 + ui5.JS5))
+    w('<script>%s%s</script></body></html>' % (JS, ui2.JS2 + ui5.JS5 + ui6.JS6))
     return o.getvalue()
 
 

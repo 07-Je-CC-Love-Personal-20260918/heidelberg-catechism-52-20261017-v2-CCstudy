@@ -230,9 +230,9 @@ def texts_page(CSS, CSS2, ICONS, LDS, PL):
             '<p class="ld">本页全部信经与信条正文均<strong>一字不差</strong>引自 '
             '<a href="%s" target="_blank" rel="noopener">基督教华人网络团契 ccifellowship.org</a>（Book of Praise 中译），'
             '包括其脚注编号（以上标显示）与经文出处。只作排版，不改一字。</p>%s</header>%s'
-            '<footer class="srcfoot">文本来源：<a href="%s">ccifellowship.org</a> · 排版：海德堡 52 主日学习站<span class="vstamp">v5 · 2026-10-20</span></footer>'
+            '<footer class="srcfoot">文本来源：<a href="%s">ccifellowship.org</a> · 排版：海德堡 52 主日学习站<span class="vstamp">%s</span></footer>'
             '</main></div><script>%s</script></body></html>'
-            % (CSS, CSS2, CSS3, ICONS, ''.join(nav), SRC, forms_stats(), ''.join(body), SRC, TEXTS_JS + __import__('ui5').JS5))
+            % (CSS, CSS2, CSS3, ICONS, ''.join(nav), SRC, forms_stats(), ''.join(body), SRC, __import__('ui5').VERSION, TEXTS_JS + __import__('ui5').JS5))
 
 
 TEXTS_JS = r"""

@@ -9,7 +9,6 @@ permissions:
   contents: write
 
 env:
-  SITE: heidelberg-catechism-52-ccstudy
 
 jobs:
   build:
@@ -30,6 +29,8 @@ jobs:
             git commit -m "chore: rebuild index.html [skip ci]"
             git push
           fi
+      - name: Version → domain
+        run: echo "SITE=heidelberg-catechism-52-$(tr -d '[:space:]' < VERSION)-ccser" >> "$GITHUB_ENV"
       - name: Stage site
         run: mkdir -p _site && cp index.html texts.html _site/ && echo "${SITE}.surge.sh" > _site/CNAME_SURGE
       - name: Deploy to Surge
