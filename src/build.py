@@ -15,6 +15,8 @@ import ui3
 import ui4
 import ui5
 import ui6
+import ui7
+ui7.patch(C, C2)
 ui3.patch_lds(LDS)
 
 E = lambda s: html.escape(str(s), quote=False)
@@ -110,7 +112,7 @@ def build():
       '%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E'
       '%3Crect width=%2732%27 height=%2732%27 fill=%27%231F3864%27/%3E'
       '%3Ctext x=%2716%27 y=%2723%27 font-size=%2720%27 text-anchor=%27middle%27 fill=%27%23F6F2E8%27%3EH%3C/text%3E%3C/svg%3E">')
-    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3 + ui4.CSS4 + ui5.CSS5 + ui6.CSS6, ui2.ICONS))
+    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3 + ui4.CSS4 + ui5.CSS5 + ui6.CSS6 + ui7.CSS7, ui2.ICONS))
 
     # topbar
     w('<div class="topbar"><div class="tb">'
@@ -396,13 +398,13 @@ def build():
       'SOLI DEO GLORIA<span class="vstamp">' + ui5.VERSION + '</span></div>')
     w('</main></div><button id="tocOpen">目录</button>'
       '<button id="toTop" aria-label="回到顶部">↑</button>')
-    w('<script>%s%s</script></body></html>' % (JS, ui2.JS2 + ui5.JS5 + ui6.JS6))
+    w('<script>%s%s</script></body></html>' % (JS, ui2.JS2 + ui5.JS5 + ui6.JS6 + ui7.JS7))
     return o.getvalue()
 
 
 if __name__ == "__main__":
     out = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "index.html")
-    h = build()
+    h = ui7.add_icons(build())
     open(out, "w", encoding="utf-8").write(h)
     print("bytes:", len(h.encode("utf-8")), "->", out)
     t = ui3.texts_page(CSS, ui2.CSS2 + ui4.CSS4 + ui5.CSS5, ui2.ICONS, LDS, PL)
