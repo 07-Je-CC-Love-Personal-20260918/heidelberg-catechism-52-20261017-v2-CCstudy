@@ -174,8 +174,8 @@ function go(id,push){var t=d.getElementById(id);if(!t)return false;reveal(t);
   var Y=y(),dist=Y-scrollY,V=innerHeight;
   if(Math.abs(dist)>V*1.5){SC(Y-Math.sign(dist)*V*.5,false);}
   requestAnimationFrame(function(){SC(y(),true);});
-  var n=0;(function fix(){if(++n>6)return;setTimeout(function(){var dy=t.getBoundingClientRect().top-H();
-    if(Math.abs(dy)>4){SC(scrollY+dy,n<3);fix();}},n<3?420:160);})();
+  var n=0;(function fix(){if(++n>10)return;setTimeout(function(){var dy=t.getBoundingClientRect().top-H();
+    if(Math.abs(dy)>4){SC(scrollY+dy,n<2);fix();}else if(n<8){fix();}},n<2?380:120);})();
   t.classList.remove('flash-t');void t.offsetWidth;t.classList.add('flash-t');
   if(push!==false)history.replaceState(null,'','#'+id);return true;}
 d.addEventListener('click',function(e){var a=e.target.closest('a[href^="#"]');if(!a)return;
@@ -184,7 +184,12 @@ d.addEventListener('click',function(e){var a=e.target.closest('a[href^="#"]');if
 /* 抽屉统一：texts 页旧的 tocopen 映射到 nav */
 new MutationObserver(function(){if(b.classList.contains('tocopen')){b.classList.remove('tocopen');b.classList.toggle('nav');}})
   .observe(b,{attributes:true,attributeFilter:['class']});
-if(location.hash){var id=decodeURIComponent(location.hash.slice(1));setTimeout(function(){go(id,false);},120);}
+if(location.hash){var id=decodeURIComponent(location.hash.slice(1));
+ /* 首次带锚点打开：逐帧瞬时校正直到连续稳定（懒渲染区块会改变高度） */
+ var t0=performance.now(),ok=0;(function snap(){var t=d.getElementById(id);if(!t)return;reveal(t);
+  var dy=t.getBoundingClientRect().top-H();if(Math.abs(dy)>3){ok=0;SC(scrollY+dy,false);}else ok++;
+  if(ok<6&&performance.now()-t0<2500)requestAnimationFrame(snap);else{t.classList.remove('flash-t');void t.offsetWidth;t.classList.add('flash-t');}})();
+ addEventListener('load',function(){var t=d.getElementById(id);if(t){var dy=t.getBoundingClientRect().top-H();if(Math.abs(dy)>3)SC(scrollY+dy,false);}});}
 })();
 
 }catch(e){console.error(e)}
