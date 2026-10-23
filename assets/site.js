@@ -2,16 +2,7 @@ try{
 (function(){
 var d=document,b=d.body,root=d.documentElement;
 
-/* ---- theme tri-state ---- */
-var TH=['auto','light','dark'],ti=0;
-try{var s=localStorage.getItem('hc-theme');if(s)ti=TH.indexOf(s)<0?0:TH.indexOf(s);}catch(e){}
-function applyTheme(){
-  var t=TH[ti];
-  if(t==='auto')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);
-  d.getElementById('themeBtn').textContent={auto:'主题·随',light:'主题·明',dark:'主题·暗'}[t];
-  try{localStorage.setItem('hc-theme',t);}catch(e){}
-}
-d.getElementById('themeBtn').onclick=function(){ti=(ti+1)%3;applyTheme();};applyTheme();
+/* theme → v11 多主题 */
 
 /* ---- toc hide / drawer ---- */
 var shell=d.querySelector('.shell');
@@ -120,11 +111,7 @@ if(d.getElementById('resetBtn'))d.getElementById('resetBtn').onclick=function(){
 };
 
 d.getElementById('toTop').onclick=function(){if(window.__lenis)window.__lenis.scrollTo(0,{duration:1.1});else window.scrollTo({top:0,behavior:'smooth'});};
-d.getElementById('printBtn').onclick=function(){
-  d.querySelectorAll('.qa.open').forEach(function(q){q.classList.remove('open');});
-  b.classList.remove('drill');drill.classList.remove('on');drill.textContent='背诵';
-  window.print();
-};
+
 })();
 
 }catch(e){console.error(e)}
@@ -259,6 +246,73 @@ if(window.Lenis&&!touch&&!rm){
  window.__lenis=L;function raf(t){L.raf(t);requestAnimationFrame(raf);}requestAnimationFrame(raf);
  new MutationObserver(function(){var o=d.querySelector('.zoverlay');if(o){o.setAttribute('data-lenis-prevent','');L.stop();}else L.start();}).observe(d.body,{childList:true});
 }
+})();
+
+}catch(e){console.error(e)}
+try{
+(function(){var d=document,R=d.documentElement,btn=d.getElementById('themeBtn');if(!btn)return;var ls;try{ls=localStorage}catch(e){}
+var TH=[["auto", "🌓", "跟随系统"], ["light", "📜", "羊皮纸"], ["forest", "🌲", "森林"], ["ocean", "🌊", "海洋"], ["rose", "🌸", "玫瑰"], ["ink", "🖋️", "墨韵"], ["dark", "🌙", "夜读"], ["starry", "✨", "星空"]],SW={"auto": "linear-gradient(90deg,#F6F2E8 50%,#13151B 50%)", "light": "#F6F2E8", "forest": "#1E6B45", "ocean": "#1565C0", "rose": "#C2185B", "ink": "#111", "dark": "#1A1D25", "starry": "linear-gradient(135deg,#17183A,#7B5CFF)"};
+function apply(k){if(k==='auto')R.removeAttribute('data-theme');else R.setAttribute('data-theme',k);
+ var t=TH.filter(function(x){return x[0]===k;})[0]||TH[0];btn.textContent=t[1]+' '+t[2];try{ls&&ls.setItem('hc-theme',k);}catch(e){}
+ p.querySelectorAll('button').forEach(function(b){b.classList.toggle('cur',b.dataset.k===k);});}
+var p=d.createElement('div');p.className='thpick';p.innerHTML=TH.map(function(t){return '<button type="button" data-k="'+t[0]+'"><i style="background:'+SW[t[0]]+'"></i>'+t[1]+' '+t[2]+'</button>';}).join('');d.body.appendChild(p);
+var k='auto';try{k=(ls&&ls.getItem('hc-theme'))||'auto';}catch(e){}apply(k);
+btn.onclick=function(e){e.stopPropagation();p.classList.toggle('on');};
+p.addEventListener('click',function(e){var b=e.target.closest('button');if(b){apply(b.dataset.k);p.classList.remove('on');}});
+d.addEventListener('click',function(e){if(!e.target.closest('.thpick'))p.classList.remove('on');});
+})();
+
+(function(){var d=document,sh=d.querySelector('.shell'),side=d.querySelector('.side');if(!sh||!side)return;var ls;try{ls=localStorage}catch(e){}
+try{var w=ls&&ls.getItem('hc-tocw');if(w)sh.style.setProperty('--tocw',w+'px');}catch(e){}
+var g=d.createElement('div');g.className='tocgrip';g.title='拖动调整目录宽度（双击复原）';side.appendChild(g);
+var x0,w0;g.addEventListener('pointerdown',function(e){x0=e.clientX;w0=side.getBoundingClientRect().width;g.setPointerCapture(e.pointerId);g.classList.add('drag');d.body.classList.add('tocdrag');});
+g.addEventListener('pointermove',function(e){if(x0==null)return;var nw=Math.max(200,Math.min(620,w0+e.clientX-x0));sh.style.setProperty('--tocw',nw+'px');});
+function end(){if(x0==null)return;x0=null;g.classList.remove('drag');d.body.classList.remove('tocdrag');try{ls&&ls.setItem('hc-tocw',Math.round(side.getBoundingClientRect().width));}catch(e){}}
+g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end);
+g.addEventListener('dblclick',function(){sh.style.removeProperty('--tocw');try{ls&&ls.removeItem('hc-tocw');}catch(e){}});
+/* 当前页的主日链接也高亮页面分组 */
+var cur=location.pathname.split('/').pop()||'index.html';d.querySelectorAll('.toc a').forEach(function(a){var h=a.getAttribute('href')||'';if(h.charAt(0)==='#'||h.indexOf(cur)===0)a.classList.add('here');});
+})();
+
+(function(){var d=document,f=d.getElementById('fab');if(!f)return;
+function to(y){var L=window.__lenis;if(L)L.scrollTo(y,{duration:1.0});else scrollTo({top:y,behavior:'smooth'});}
+f.addEventListener('click',function(e){var b=e.target.closest('[data-f]');if(!b)return;var k=b.dataset.f;
+ if(k==='tog'){f.classList.toggle('open');return;}
+ if(k==='back')history.back();else if(k==='fwd')history.forward();else if(k==='top')to(0);else if(k==='bot')to(d.documentElement.scrollHeight);});
+if(matchMedia('(hover:hover)').matches){f.addEventListener('mouseenter',function(){f.classList.add('open');});f.addEventListener('mouseleave',function(){f.classList.remove('open');});}
+d.addEventListener('click',function(e){if(!e.target.closest('#fab'))f.classList.remove('open');});
+})();
+
+(function(){var d=document;var E1=d.getElementById('mapEU'),E2=d.getElementById('mapWorld');if(!E1&&!E2)return;
+function css(h){if(d.querySelector('link[href="'+h+'"]'))return;var l=d.createElement('link');l.rel='stylesheet';l.href=h;d.head.appendChild(l);}
+function js(src,cb,fail){var s=d.createElement('script');s.src=src;s.onload=cb;s.onerror=fail;d.head.appendChild(s);}
+var TILES=[
+ {n:'Esri',u:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',o:{attribution:'© Esri'}},
+ {n:'高德',u:'https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}',o:{subdomains:'1234',attribution:'© 高德地图'}},
+ {n:'OSM',u:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',o:{attribution:'© OpenStreetMap'}}];
+function base(map,note){var k=0,layer=null,ok=0,bad=0,timer;
+ function use(i){if(layer)map.removeLayer(layer);k=i;ok=0;bad=0;var t=TILES[i];layer=L.tileLayer(t.u,Object.assign({maxZoom:18,crossOrigin:true},t.o)).addTo(map);
+  note.textContent='底图：'+t.n+' · 载入中…';
+  layer.on('tileload',function(){ok++;if(ok===4)note.textContent='底图：'+t.n;});
+  layer.on('tileerror',function(){bad++;if(bad>=4&&ok<2)next();});
+  clearTimeout(timer);timer=setTimeout(function(){if(ok<2)next();},5000);}
+ function next(){if(k+1<TILES.length)use(k+1);else{note.textContent='在线底图暂不可用，请参看上方示意图';}}
+ use(0);}
+function pin(c,t){return L.divIcon({className:'',html:'<div class="pin11 '+c+'"><span>'+t+'</span></div>',iconSize:[30,30],iconAnchor:[15,30],popupAnchor:[0,-28]});}
+function init(){
+ if(E1){var ev=JSON.parse(d.getElementById('evData').textContent);var m=L.map(E1,{scrollWheelZoom:false,zoomSnap:.5}).setView([50.2,8.5],5.5);base(m,d.getElementById('mapEUnote'));
+  var seen={},mk=[];ev.forEach(function(e,i){var key=e.p;var html='<b>'+e.y+' · '+e.t+'</b><br>📍 '+e.p+'<br>'+e.x;
+   if(seen[key]){seen[key].m.bindPopup(seen[key].h+='<hr style="border:0;border-top:1px dashed #ccc">'+html);mk[i]=seen[key].m;return;}
+   var mm=L.marker([e.la,e.lo],{icon:pin(e.c,i+1)}).addTo(m).bindPopup(html);seen[key]={m:mm,h:html};mk[i]=mm;});
+  L.polyline(ev.map(function(e){return [e.la,e.lo];}),{color:'#DB8A0B',weight:2,dashArray:'6 8',opacity:.8}).addTo(m);
+  d.querySelectorAll('.tl11').forEach(function(b){b.addEventListener('click',function(){var e=ev[+b.dataset.i];d.querySelectorAll('.tl11.on').forEach(function(x){x.classList.remove('on')});b.classList.add('on');
+   m.flyTo([e.la,e.lo],7,{duration:1.1});setTimeout(function(){mk[+b.dataset.i].openPopup();},1150);});});}
+ if(E2){var wd=JSON.parse(d.getElementById('wdData').textContent);var w=L.map(E2,{scrollWheelZoom:false,worldCopyJump:true}).setView([25,20],2);base(w,d.getElementById('mapWorldnote'));
+  var hd=[49.41,8.69];wd.forEach(function(p,i){L.marker([p.la,p.lo],{icon:pin(p.c,i+1)}).addTo(w).bindPopup('<b>'+p.p+'</b><br>'+p.t);
+   if(i)L.polyline([hd,[p.la,p.lo]],{color:'#2457C5',weight:1.5,opacity:.55,dashArray:'4 6'}).addTo(w);});}
+}
+function boot(){css('assets/leaflet/leaflet.css');js('assets/leaflet/leaflet.js',init,function(){['mapEUnote','mapWorldnote'].forEach(function(i){var n=d.getElementById(i);if(n)n.textContent='地图组件加载失败，请参看示意图';});});}
+if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){if(es.some(function(x){return x.isIntersecting;})){io.disconnect();boot();}},{rootMargin:'400px'});[E1,E2].forEach(function(x){if(x)io.observe(x);});}else boot();
 })();
 
 }catch(e){console.error(e)}

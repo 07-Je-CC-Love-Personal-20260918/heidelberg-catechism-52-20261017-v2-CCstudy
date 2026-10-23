@@ -19,6 +19,7 @@ import ui7
 import ui8
 import ui9
 import ui10
+import ui11
 ui7.patch(C, C2)
 ui3.patch_lds(LDS)
 
@@ -116,7 +117,7 @@ def build():
       '%3Crect width=%2732%27 height=%2732%27 fill=%27%231F3864%27/%3E'
       '%3Ctext x=%2716%27 y=%2723%27 font-size=%2720%27 text-anchor=%27middle%27 fill=%27%23F6F2E8%27%3EH%3C/text%3E%3C/svg%3E">')
     w('<script>if("IntersectionObserver" in window)document.documentElement.classList.add("io")</script>')
-    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3 + ui4.CSS4 + ui5.CSS5 + ui6.CSS6 + ui7.CSS7 + ui8.CSS8 + ui9.CSS9, ui2.ICONS))
+    w('<style>%s%s</style></head><body>%s<div id="prog"></div>' % (CSS, ui2.CSS2 + ui3.CSS3 + ui4.CSS4 + ui5.CSS5 + ui6.CSS6 + ui7.CSS7 + ui8.CSS8 + ui9.CSS9 + ui11.CSS11, ui2.ICONS))
 
     # topbar
     w('<div class="topbar"><div class="tb">'
@@ -126,7 +127,6 @@ def build():
       '<button class="btn" id="drillBtn" title="遮盖答案，点按逐问自测">背诵</button>'
       '<button class="btn" id="themeBtn" title="明／暗／跟随系统">主题</button>'
       '<a class="btn" href="texts.html" title="信经与信条全文（ccifellowship.org 原文）">原文</a>'
-      '<button class="btn" id="printBtn">打印</button>'
       '</div></div><div class="scrim"></div>')
 
     # ---------- sidebar ----------
@@ -160,7 +160,10 @@ def build():
         if d["part"] != last:
             last = d["part"]
             w('<div class="toc-h">%s · %s</div>' % (E(d["part"]), PL[d["part"]]))
-        w('<a href="#ld%d" data-n="%d"><span class="no">%d</span><span class="emo">%s</span>%s</a>' % (d["n"], d["n"], d["n"], ui4.EMO[d["n"] - 1], E(d["title"])))
+        w('<a href="#ld%d" data-n="%d"><span class="no">%d</span><span class="emo">%s</span>%s<span class="qr">(%s问)</span></a>' % (d["n"], d["n"], d["n"], ui4.EMO[d["n"] - 1], E(d["title"]), ("%d-%d" % (d["qas"][0][0], d["qas"][-1][0])) if len(d["qas"]) > 1 else d["qas"][0][0]))
+    w('<div class="toc-h">历史 · 地图 · 文化</div>'
+      '<a href="#hist-intro"><span class="no">史</span>一部要理诞生的现场</a><a href="#hist-map"><span class="no">图</span>互动时间线 × 真实地图</a>'
+      '<a href="#hist-rhine"><span class="no">河</span>莱茵走廊示意图</a><a href="#hist-world"><span class="no">世</span>全球传播地图</a><a href="#hist-culture"><span class="no">文</span>文化区域对照</a>')
     w('<div class="toc-h">跨主日专题 · TOPICA</div>')
     for t in TOPICS:
         w('<a href="#%s"><span class="no">%s</span>%s</a>'
@@ -269,6 +272,8 @@ def build():
     w(sec("flash", "总论 VIII·A", "52 主日闪卡速记",
           "正面只给图标与题目，先自己说出本质核心，再翻面核对「重点 · 记忆钥匙 · 今日应用」。勾选过「已背熟」的主日在下方进度条显示为金色，可只练未背熟的。",
           ui6.flashcards(LDS, E)))
+
+    w(ui11.history_sections())
 
     # ---------- 52 主日 ----------
     last = None
@@ -401,8 +406,8 @@ def build():
       'BC＝比利时信条　CoD＝多特信经　WCF＝威斯敏斯特信条　WSC/WLC＝威斯敏斯特小／大要理问答<br><br>'
       'SOLI DEO GLORIA<span class="vstamp">' + ui5.VERSION + '</span></div>')
     w('</main></div><button id="tocOpen">目录</button>'
-      '<button id="toTop" aria-label="回到顶部">↑</button>')
-    w('<script>%s</script></body></html>' % ''.join('try{%s\n}catch(e){console.error(e)}\n' % x for x in (JS, ui2.JS2, ui5.JS5, ui6.JS6, ui7.JS7, ui8.JS8, ui9.JS9)))
+      '<button id="toTop" aria-label="回到顶部">↑</button>' + ui11.FAB_HTML)
+    w('<script>%s</script></body></html>' % ''.join('try{%s\n}catch(e){console.error(e)}\n' % x for x in (JS, ui2.JS2, ui5.JS5, ui6.JS6, ui7.JS7, ui8.JS8, ui9.JS9, ui11.JS11)))
     return o.getvalue()
 
 
@@ -414,6 +419,11 @@ if __name__ == "__main__":
     for _f, _t in PAGES.items():
         open(os.path.join(os.path.dirname(out), _f), 'w', encoding='utf-8').write(_t)
     print("pages:", {k: len(v.encode()) for k, v in PAGES.items()})
-    t = ui3.texts_page(CSS, ui2.CSS2 + ui4.CSS4 + ui5.CSS5 + ui9.CSS9, ui2.ICONS, LDS, PL)
+    import subprocess, shutil as _sh
+    if _sh.which("node"):
+        r = subprocess.run(["node", "--check", os.path.join(os.path.dirname(out), "assets", "site.js")], capture_output=True, text=True)
+        if r.returncode:
+            raise SystemExit("site.js 语法错误：\n" + r.stderr[:600])
+    t = ui3.texts_page(CSS, ui2.CSS2 + ui4.CSS4 + ui5.CSS5 + ui9.CSS9 + ui11.CSS11, ui2.ICONS, LDS, PL)
     open(os.path.join(os.path.dirname(out), "texts.html"), "w", encoding="utf-8").write(ui10.fix_texts(t, WHERE))
     print("texts.html bytes:", len(t.encode("utf-8")))

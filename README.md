@@ -1,6 +1,6 @@
 # 海德堡要理问答 · 52 主日全景解读
 
-> **版本标识：`heidelberg-catechism-52-20261023-v10-CCstudy`**（主题-日期-版本号-CCstudy）
+> **版本标识：`heidelberg-catechism-52-20261023-v11-CCstudy`**（主题-日期-版本号-CCstudy）
 > 仓库名不含版本号；Surge／Netlify 域名为「主题-日期-版本号-CCstudy」（v6–v9 为 -ccser），由根目录 `VERSION` 文件自动生成；版本号同时显示在网页页脚。
 
 欧陆改革宗（三项联合信条）视角的《海德堡要理问答》（Catechesis Palatina, 1563）全书解读。
@@ -9,8 +9,8 @@
 | 部署 | 链接 |
 |---|---|
 | GitHub Pages | https://07-je-cc-love-personal-20260918.github.io/heidelberg-catechism-52-CCstudy/ |
-| Surge | https://heidelberg-catechism-52-20261023-v10-ccstudy.surge.sh |
-| Netlify | https://heidelberg-catechism-52-20261023-v10-ccstudy.netlify.app |
+| Surge | https://heidelberg-catechism-52-20261023-v11-ccstudy.surge.sh |
+| Netlify | https://heidelberg-catechism-52-20261023-v11-ccstudy.netlify.app |
 | 原文阅读室 | 以上任一站点 + `/texts.html` |
 | 仓库 | https://github.com/07-Je-CC-Love-Personal-20260918/heidelberg-catechism-52-CCstudy |
 
@@ -22,6 +22,7 @@
 
 | 标记 | 日期 | 说明 |
 |---|---|---|
+| `v11-20261023` | 2026-10-23 | 历史·地图·文化页（真实地图＋示意图）、8 种主题、目录可拖宽、角落导航、亚他那修信经序号修复 |
 | `v10-20261023` | 2026-10-23 | 多页面拆分、原生页面过渡与预渲染、全站搜索、每部分一页纸要点、关键限定词标记 |
 | `v9-20261020` | 2026-10-20 | 顺滑性能优化、惯性平滑滚动、新版重点标记、主题词分布图、自动发布恢复点 |
 | `v8-20261020` | 2026-10-20 | 主日 14–19 手机竖版曲线、六色主题词记忆标记、稳健显示 |
@@ -34,9 +35,22 @@
 
 ## 更新说明
 
+**v11 · 2026-10-23**
+- 新页面 `history.html`「历史 · 地图 · 文化」：
+  - 互动时间线 1517→1619（14 个事件，点按即飞到真实地点并弹出说明）× 真实地图
+  - 全球传播地图（海德堡 → 荷兰、匈牙利、北美、南非、印尼、韩国、华语教会）
+  - 莱茵走廊示意图（思想顺流北上的动态概念图）＋文化区域对照表（普法尔茨／萨克森／日内瓦／低地）
+- 地图稳定性：Leaflet 1.9.4 内置于 `assets/leaflet/`（不依赖外部 CDN）；底图多源自动切换 Esri → 高德 → OpenStreetMap（单源超时或报错即换下一源）；全部失败时提示参看示意图
+- 修复：《亚他那修信经》第 41、42 条被错拆成「4 / 1)」「4 / 2)」——分句规则改为不拆数字；三大信经逐字核对与 ccifellowship.org 原文一致（仅分行）
+- 删除「打印」按钮及功能
+- 8 种主题：跟随系统、羊皮纸、森林、海洋、玫瑰、墨韵、夜读、星空（主题面板，记住选择）
+- 目录：可拖动右缘调整宽度（双击复原、记住宽度）；当前项高亮更醒目；52 主日标题后加「(x-x问)」
+- 右下角导航：主页／返回／前进／到顶部／到底部（悬停或点 ⋯ 展开，平时半透明不打扰）
+- 构建时自动 `node --check` 校验脚本，杜绝语法错误上线
+
 **v10 · 2026-10-23**
 - 多页面拆分：单页 1.08MB／1.7 万节点 → 7 个轻量页面（57–190KB，约 3 千节点）＋共享 `assets/site.css`、`assets/site.js`（浏览器缓存，换页不再重复下载）
-  - `index.html` 总论 · `p1-misery.html` 主日 1–4 · `p2-christ.html` 5–19 · `p3-spirit.html` 20–31 · `p4-law.html` 32–44 · `p5-prayer.html` 45–52 · `topics.html` 专题·结语·附录 · `texts.html` 原文
+  - `index.html` 总论 · `history.html` 历史·地图·文化 · `p1-misery.html` 主日 1–4 · `p2-christ.html` 5–19 · `p3-spirit.html` 20–31 · `p4-law.html` 32–44 · `p5-prayer.html` 45–52 · `topics.html` 专题·结语·附录 · `texts.html` 原文
 - 原生顺滑：跨页 View Transitions 淡入滑动；Speculation Rules 预取／悬停预渲染相邻页面，点击几乎瞬开；桌面保留 Lenis 惯性滚动
 - 全站搜索：`assets/search.js` 索引（按需加载），结果面板跨页跳转，主日优先、关键词高亮，回车直达
 - 每个主日页顶部新增「一页纸」：一句话主旨＋五条要点（编号圆章）＋本页主日链条（可点）＋钥节
@@ -74,7 +88,7 @@
 - Surge／Netlify 域名改为 `heidelberg-catechism-52-<日期>-<版本>-ccser`，由 `VERSION` 文件驱动，每版自动生成新域名、旧版域名保留可回看
 - 页脚版本号同样读取 `VERSION`
 
-**发布新版本**：改 `VERSION`（如 `20261101-v11`）→ 推送 `main` → 三站自动部署，新域名即生效。
+**发布新版本**：改 `VERSION`（如 `20261101-v12`）→ 推送 `main` → 三站自动部署，新域名即生效。
 
 **v5 · 2026-10-20**
 - 目录链接全部修复并逐一核对（主页 85 个、原文页 96 个，电脑与手机共 362 次点击测试全部落点准确）：动态顶栏高度、二次校正滚动、长距离先瞬移再平滑、移动端抽屉统一、去掉导致落点漂移的 content-visibility

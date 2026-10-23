@@ -97,7 +97,7 @@ def creed_lines(i, c):
     if i == 2:  # 亚他那修：按原文条号分句
         out = []
         for l in c["lines"]:
-            out += [x.strip() for x in re.split(r'(?=\d+\) )', l) if x.strip()]
+            out += [x.strip() for x in re.split(r'(?<!\d)(?=\d+\) )', l) if x.strip()]
         return out
     out = []
     for l in c["lines"]:
@@ -232,7 +232,7 @@ def texts_page(CSS, CSS2, ICONS, LDS, PL):
             '包括其脚注编号（以上标显示）与经文出处。只作排版，不改一字。</p>%s</header>%s'
             '<footer class="srcfoot">文本来源：<a href="%s">ccifellowship.org</a> · 排版：海德堡 52 主日学习站<span class="vstamp">%s</span></footer>'
             '</main></div><script>%s</script></body></html>'
-            % (CSS, CSS2, CSS3, ICONS, ''.join(nav), SRC, forms_stats(), ''.join(body), SRC, __import__('ui5').VERSION, TEXTS_JS + __import__('ui5').JS5 + __import__('ui9').JS9))
+            % (CSS, CSS2, CSS3, ICONS, ''.join(nav), SRC, forms_stats(), ''.join(body), SRC, __import__('ui5').VERSION, TEXTS_JS + __import__('ui5').JS5 + __import__('ui9').JS9 + __import__('ui11').THEME_JS + __import__('ui11').TOC_JS + __import__('ui11').FAB_JS))
 
 
 TEXTS_JS = r"""

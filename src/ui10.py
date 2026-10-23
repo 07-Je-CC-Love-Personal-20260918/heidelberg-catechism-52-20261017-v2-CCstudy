@@ -7,6 +7,7 @@ A = lambda s: _h.escape(str(s), quote=True)
 
 PAGES = [  # file, emoji, short, long, LD range or None
     ("index.html", "🏛️", "总论", "总论 · 圣经全景与历史", None),
+    ("history.html", "🗺️", "历史·地图", "历史 · 地图 · 文化", None),
     ("p1-misery.html", "🪞", "困苦", "总纲与困苦 · 主日 1–4", (1, 4)),
     ("p2-christ.html", "✝️", "中保", "拯救 · 中保与圣子 · 主日 5–19", (5, 19)),
     ("p3-spirit.html", "🔥", "圣灵·圣礼", "拯救 · 圣灵、教会与圣礼 · 主日 20–31", (20, 31)),
@@ -154,6 +155,8 @@ def _page_of(c):
         for f, *_, rg in PAGES:
             if rg and rg[0] <= n <= rg[1]:
                 return f
+    if 'class="sec histsec"' in c[:60]:
+        return "history.html"
     if 'class="sec appsec"' in c[:60] or c.startswith('<div class="foot"'):
         return "topics.html" if 'appsec' in c[:60] else "*"
     return None
@@ -173,7 +176,9 @@ def split(h, LDS, EMO, outdir):
     LDS_by_n = {d["n"]: d for d in LDS}
     # 1) 抽出样式与脚本到共享文件
     styles = re.findall(r'<style>(.*?)</style>', h, flags=re.S)
-    css = '\n'.join(styles) + VT_CSS
+    css = fix_css('\n'.join(styles) + VT_CSS)
+    import shutil
+    shutil.copytree(os.path.join(os.path.dirname(os.path.abspath(__file__)), "vendor", "leaflet"), os.path.join(outdir, "assets", "leaflet"), dirs_exist_ok=True)
     h = re.sub(r'<style>.*?</style>', '', h, flags=re.S)
     scripts = [s for s in re.findall(r'<script>(.*?)</script>', h, flags=re.S)]
     big = max(scripts, key=len)
@@ -274,6 +279,9 @@ def split(h, LDS, EMO, outdir):
 
 
 def fix_texts(t, where):
+    import ui11
+    t = re.sub(r'<style>(.*?)</style>', lambda m: '<style>' + fix_css(m.group(1)) + '</style>', t, count=1, flags=re.S)
+    t = t.replace('</main></div>', '</main></div>' + ui11.FAB_HTML, 1)
     def rep(m):
         i = m.group(1)
         return 'href="%s#%s"' % (where.get(i) or "index.html", i)
@@ -282,3 +290,10 @@ def fix_texts(t, where):
                   '@keyframes vt-out{to{opacity:0}}@keyframes vt-in{from{opacity:0;transform:translate3d(0,16px,0)}}</style>'
                   '<script type="speculationrules">{"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script></head>', 1)
     return t
+
+
+def fix_css(css):
+    """深色衍生主题（星空）复用 dark 规则；自动深色只在未选主题时生效"""
+    css = css.replace(':root:not([data-theme="light"])', ':root:not([data-theme])')
+    css = re.sub(r':root\[data-theme="dark"\]([^,{]*)', lambda m: ':root[data-theme="dark"]%s,:root[data-theme="starry"]%s' % (m.group(1), m.group(1)), css)
+    return css

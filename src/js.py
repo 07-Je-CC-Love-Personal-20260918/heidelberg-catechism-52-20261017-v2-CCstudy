@@ -3,16 +3,7 @@ JS = r"""
 (function(){
 var d=document,b=d.body,root=d.documentElement;
 
-/* ---- theme tri-state ---- */
-var TH=['auto','light','dark'],ti=0;
-try{var s=localStorage.getItem('hc-theme');if(s)ti=TH.indexOf(s)<0?0:TH.indexOf(s);}catch(e){}
-function applyTheme(){
-  var t=TH[ti];
-  if(t==='auto')root.removeAttribute('data-theme');else root.setAttribute('data-theme',t);
-  d.getElementById('themeBtn').textContent={auto:'主题·随',light:'主题·明',dark:'主题·暗'}[t];
-  try{localStorage.setItem('hc-theme',t);}catch(e){}
-}
-d.getElementById('themeBtn').onclick=function(){ti=(ti+1)%3;applyTheme();};applyTheme();
+/* theme → v11 多主题 */
 
 /* ---- toc hide / drawer ---- */
 var shell=d.querySelector('.shell');
@@ -121,10 +112,6 @@ if(d.getElementById('resetBtn'))d.getElementById('resetBtn').onclick=function(){
 };
 
 d.getElementById('toTop').onclick=function(){if(window.__lenis)window.__lenis.scrollTo(0,{duration:1.1});else window.scrollTo({top:0,behavior:'smooth'});};
-d.getElementById('printBtn').onclick=function(){
-  d.querySelectorAll('.qa.open').forEach(function(q){q.classList.remove('open');});
-  b.classList.remove('drill');drill.classList.remove('on');drill.textContent='背诵';
-  window.print();
-};
+
 })();
 """
