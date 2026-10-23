@@ -315,6 +315,19 @@ function boot(){css('assets/leaflet/leaflet.css');js('assets/leaflet/leaflet.js'
 if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){if(es.some(function(x){return x.isIntersecting;})){io.disconnect();boot();}},{rootMargin:'400px'});[E1,E2].forEach(function(x){if(x)io.observe(x);});}else boot();
 })();
 
+(function(){var d=document,b=d.body,main=d.querySelector('.main');if(!main||!d.querySelector('.ld .qa'))return;
+var bar=d.createElement('div');bar.className='drillbar';
+bar.innerHTML='<span>🎯 <b>背诵模式</b>：答案与解读已隐藏，只留题目。逐题背出后点按核对；想不起来可点「记忆钥匙」看模糊提示。</span><span class="sp"></span><span id="drCnt"></span><button class="btn" type="button" data-d="all">全部显示</button><button class="btn" type="button" data-d="none">全部遮盖</button><button class="btn" type="button" data-d="exit">退出背诵</button>';
+var first=main.querySelector('.ld')||main.firstChild;main.insertBefore(bar,main.querySelector('.onepage')||first);
+function cnt(){var all=d.querySelectorAll('.ld .qa').length,op=d.querySelectorAll('.ld .qa.open').length;var c=d.getElementById('drCnt');if(c)c.textContent='已核对 '+op+' / '+all+' 问';}
+bar.addEventListener('click',function(e){var x=e.target.closest('[data-d]');if(!x)return;var k=x.dataset.d;
+ if(k==='all')d.querySelectorAll('.ld .qa').forEach(function(q){q.classList.add('open');});
+ if(k==='none'){d.querySelectorAll('.ld .qa.open,.kb-memo.show').forEach(function(q){q.classList.remove('open','show');});}
+ if(k==='exit')d.getElementById('drillBtn').click();cnt();});
+d.addEventListener('click',function(e){if(!b.classList.contains('drill'))return;var m=e.target.closest('.ld .kb-memo');if(m)m.classList.toggle('show');if(e.target.closest('.ld .qa'))setTimeout(cnt,0);});
+var btn=d.getElementById('drillBtn');if(btn){btn.title='背诵自测：遮住答案与解读，逐题核对';btn.addEventListener('click',function(){setTimeout(cnt,0);if(b.classList.contains('drill')){var t=d.querySelector('.drillbar');if(t&&t.getBoundingClientRect().top<0)t.scrollIntoView({block:'start'});}});}
+cnt();})();
+
 }catch(e){console.error(e)}
 
 (function(){var d=document,box=d.getElementById('q');if(!box)return;var IDX=null,panel=d.createElement('div');panel.className='sres';d.body.appendChild(panel);

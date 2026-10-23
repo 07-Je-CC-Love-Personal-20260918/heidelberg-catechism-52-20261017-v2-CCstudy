@@ -1,6 +1,6 @@
 # 海德堡要理问答 · 52 主日全景解读
 
-> **版本标识：`heidelberg-catechism-52-20261023-v11-CCstudy`**（主题-日期-版本号-CCstudy）
+> **版本标识：`heidelberg-catechism-52-20261023-v12-CCstudy`**（主题-日期-版本号-CCstudy）
 > 仓库名不含版本号；Surge／Netlify 域名为「主题-日期-版本号-CCstudy」（v6–v9 为 -ccser），由根目录 `VERSION` 文件自动生成；版本号同时显示在网页页脚。
 
 欧陆改革宗（三项联合信条）视角的《海德堡要理问答》（Catechesis Palatina, 1563）全书解读。
@@ -9,8 +9,8 @@
 | 部署 | 链接 |
 |---|---|
 | GitHub Pages | https://07-je-cc-love-personal-20260918.github.io/heidelberg-catechism-52-CCstudy/ |
-| Surge | https://heidelberg-catechism-52-20261023-v11-ccstudy.surge.sh |
-| Netlify | https://heidelberg-catechism-52-20261023-v11-ccstudy.netlify.app |
+| Surge | https://heidelberg-catechism-52-20261023-v12-ccstudy.surge.sh |
+| Netlify | https://heidelberg-catechism-52-20261023-v12-ccstudy.netlify.app |
 | 原文阅读室 | 以上任一站点 + `/texts.html` |
 | 仓库 | https://github.com/07-Je-CC-Love-Personal-20260918/heidelberg-catechism-52-CCstudy |
 
@@ -22,6 +22,7 @@
 
 | 标记 | 日期 | 说明 |
 |---|---|---|
+| `v12-20261023` | 2026-10-23 | 背诵模式重做为真正的自测 |
 | `v11-20261023` | 2026-10-23 | 历史·地图·文化页（真实地图＋示意图）、8 种主题、目录可拖宽、角落导航、亚他那修信经序号修复 |
 | `v10-20261023` | 2026-10-23 | 多页面拆分、原生页面过渡与预渲染、全站搜索、每部分一页纸要点、关键限定词标记 |
 | `v9-20261020` | 2026-10-20 | 顺滑性能优化、惯性平滑滚动、新版重点标记、主题词分布图、自动发布恢复点 |
@@ -34,6 +35,9 @@
 恢复：`git checkout <标记>` 后推送到 `main`，或在 Releases 页下载源码包。
 
 ## 更新说明
+
+**v12 · 2026-10-23**
+- 「背诵／退出背诵」（顶栏右上）重做为真正的自测：开启后只留每一问的题目，答案与全部解读（重点、今日应用、逻辑、背景、难点、神学剖析、一页纸）隐藏；点题目显示答案、再点遮住；「记忆钥匙」变为模糊提示卡，点按才显示；页顶说明栏显示「已核对 x / y 问」，并有全部显示／全部遮盖／退出按钮。修复前旧版只遮答案，重点与解读仍可见
 
 **v11 · 2026-10-23**
 - 新页面 `history.html`「历史 · 地图 · 文化」：
@@ -88,7 +92,7 @@
 - Surge／Netlify 域名改为 `heidelberg-catechism-52-<日期>-<版本>-ccser`，由 `VERSION` 文件驱动，每版自动生成新域名、旧版域名保留可回看
 - 页脚版本号同样读取 `VERSION`
 
-**发布新版本**：改 `VERSION`（如 `20261101-v12`）→ 推送 `main` → 三站自动部署，新域名即生效。
+**发布新版本**：改 `VERSION`（如 `20261101-v13`）→ 推送 `main` → 三站自动部署，新域名即生效。
 
 **v5 · 2026-10-20**
 - 目录链接全部修复并逐一核对（主页 85 个、原文页 96 个，电脑与手机共 362 次点击测试全部落点准确）：动态顶栏高度、二次校正滚动、长距离先瞬移再平滑、移动端抽屉统一、去掉导致落点漂移的 content-visibility

@@ -290,3 +290,45 @@ d.addEventListener('click',function(e){if(!e.target.closest('#fab'))f.classList.
 
 CSS11 = HIST_CSS + THEME_CSS + TOC_CSS + FAB_CSS
 JS11 = THEME_JS + TOC_JS + FAB_JS + HIST_JS
+
+# ───────── 背诵模式（自测）重做 ─────────
+DRILL_CSS = r"""
+/* 背诵模式：只留题目；答案点按显示；记忆钥匙作模糊提示；其余解读全部隐藏 */
+body.drill .onepage,body.drill .ld .keyline .kb-core,body.drill .ld .keyline .kb-app,body.drill .ld .ld-side,body.drill .ld .ld-g3,
+body.drill .ld details.deep,body.drill .ld .srcnote,body.drill .ld .qa .refs{display:none!important}
+body.drill .ld .ld-g{grid-template-columns:1fr!important}
+body.drill .ld .keyline{grid-template-columns:1fr!important}
+body.drill .ld .kb-memo{cursor:pointer}
+body.drill .ld .kb-memo p{filter:blur(7px);user-select:none;transition:filter .25s}
+body.drill .ld .kb-memo.show p{filter:none}
+body.drill .ld .kb-memo .badge::after{content:" · 想不起来？点按看提示"}
+body.drill .ld .kb-memo.show .badge::after{content:" · 提示已显示"}
+body.drill .qa{cursor:pointer;transition:background .2s}
+body.drill .qa:not(.open):hover{background:color-mix(in srgb,var(--gratitude) 10%,transparent)}
+body.drill .qa::after{content:"👆 先自己背出答案，再点按核对"!important;display:block;font-family:var(--sans);font-size:12.5px;color:var(--brass);margin-top:6px}
+body.drill .qa.open::after{content:"✅ 已显示 · 再点一次遮住"!important;color:var(--teal)}
+body.drill .qa.open .a{display:block!important;animation:fadein .25s ease}
+.drillbar{display:none}
+body.drill .drillbar{display:flex;position:sticky;top:calc(var(--tbh) + 6px);z-index:30;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:10px 0;padding:10px 14px;
+ border-radius:14px;background:color-mix(in srgb,var(--gratitude) 16%,var(--paper-2));border:1.5px solid color-mix(in srgb,var(--gratitude) 45%,transparent);box-shadow:var(--sh2);font-size:14.5px}
+.drillbar b{color:var(--gratitude)}
+.drillbar .sp{flex:1}
+.drillbar .btn{padding:5px 12px;font-size:13px}
+#drillBtn.on{background:var(--gratitude)!important;border-color:var(--gratitude)!important;color:#fff!important}
+"""
+DRILL_JS = r"""
+(function(){var d=document,b=d.body,main=d.querySelector('.main');if(!main||!d.querySelector('.ld .qa'))return;
+var bar=d.createElement('div');bar.className='drillbar';
+bar.innerHTML='<span>🎯 <b>背诵模式</b>：答案与解读已隐藏，只留题目。逐题背出后点按核对；想不起来可点「记忆钥匙」看模糊提示。</span><span class="sp"></span><span id="drCnt"></span><button class="btn" type="button" data-d="all">全部显示</button><button class="btn" type="button" data-d="none">全部遮盖</button><button class="btn" type="button" data-d="exit">退出背诵</button>';
+var first=main.querySelector('.ld')||main.firstChild;main.insertBefore(bar,main.querySelector('.onepage')||first);
+function cnt(){var all=d.querySelectorAll('.ld .qa').length,op=d.querySelectorAll('.ld .qa.open').length;var c=d.getElementById('drCnt');if(c)c.textContent='已核对 '+op+' / '+all+' 问';}
+bar.addEventListener('click',function(e){var x=e.target.closest('[data-d]');if(!x)return;var k=x.dataset.d;
+ if(k==='all')d.querySelectorAll('.ld .qa').forEach(function(q){q.classList.add('open');});
+ if(k==='none'){d.querySelectorAll('.ld .qa.open,.kb-memo.show').forEach(function(q){q.classList.remove('open','show');});}
+ if(k==='exit')d.getElementById('drillBtn').click();cnt();});
+d.addEventListener('click',function(e){if(!b.classList.contains('drill'))return;var m=e.target.closest('.ld .kb-memo');if(m)m.classList.toggle('show');if(e.target.closest('.ld .qa'))setTimeout(cnt,0);});
+var btn=d.getElementById('drillBtn');if(btn){btn.title='背诵自测：遮住答案与解读，逐题核对';btn.addEventListener('click',function(){setTimeout(cnt,0);if(b.classList.contains('drill')){var t=d.querySelector('.drillbar');if(t&&t.getBoundingClientRect().top<0)t.scrollIntoView({block:'start'});}});}
+cnt();})();
+"""
+CSS11 += DRILL_CSS
+JS11 += DRILL_JS
