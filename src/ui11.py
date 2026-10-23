@@ -230,12 +230,11 @@ d.addEventListener('click',function(e){if(!e.target.closest('.thpick'))p.classLi
 # ───────── 目录可拖宽 + 动态高亮强化 ─────────
 TOC_CSS = r"""
 @media (min-width:981px){.shell:not(.hid){grid-template-columns:var(--tocw,300px) minmax(0,1fr)!important}}
-.side{position:sticky}
-.tocgrip{position:absolute;top:0;right:-5px;width:10px;height:100%;cursor:col-resize;z-index:5;touch-action:none}
-.tocgrip::after{content:"";position:absolute;top:50%;left:3px;width:4px;height:46px;margin-top:-23px;border-radius:4px;background:var(--rule);transition:background .2s,height .2s}
+.tocgrip{position:fixed;top:0;left:0;width:12px;height:100vh;cursor:col-resize;z-index:60;touch-action:none;display:none}
+.tocgrip::after{content:"";position:absolute;top:50%;left:4px;width:4px;height:46px;margin-top:-23px;border-radius:4px;background:var(--rule);transition:background .2s,height .2s}
 .tocgrip:hover::after,.tocgrip.drag::after{background:var(--royal);height:80px;margin-top:-40px}
 body.tocdrag{cursor:col-resize;user-select:none}
-@media (max-width:980px){.tocgrip{display:none}}
+
 .toc a.active{background:linear-gradient(90deg,color-mix(in srgb,var(--royal) 16%,transparent),transparent)!important;border-left:3px solid var(--rubric)!important;color:var(--royal)!important;font-weight:700}
 .toc a.active .emo{display:inline-block;animation:bob 1.6s ease-in-out 2}
 .toc a .qr{font-family:var(--sans);font-size:11.5px;color:var(--muted);margin-left:3px;white-space:nowrap;font-weight:400}
@@ -244,12 +243,24 @@ body.tocdrag{cursor:col-resize;user-select:none}
 TOC_JS = r"""
 (function(){var d=document,sh=d.querySelector('.shell'),side=d.querySelector('.side');if(!sh||!side)return;var ls;try{ls=localStorage}catch(e){}
 try{var w=ls&&ls.getItem('hc-tocw');if(w)sh.style.setProperty('--tocw',w+'px');}catch(e){}
-var g=d.createElement('div');g.className='tocgrip';g.title='拖动调整目录宽度（双击复原）';side.appendChild(g);
-var x0,w0;g.addEventListener('pointerdown',function(e){x0=e.clientX;w0=side.getBoundingClientRect().width;g.setPointerCapture(e.pointerId);g.classList.add('drag');d.body.classList.add('tocdrag');});
-g.addEventListener('pointermove',function(e){if(x0==null)return;var nw=Math.max(200,Math.min(620,w0+e.clientX-x0));sh.style.setProperty('--tocw',nw+'px');});
-function end(){if(x0==null)return;x0=null;g.classList.remove('drag');d.body.classList.remove('tocdrag');try{ls&&ls.setItem('hc-tocw',Math.round(side.getBoundingClientRect().width));}catch(e){}}
+var g=d.createElement('div');g.className='tocgrip';g.title='拖动调整目录宽度（双击复原）';d.body.appendChild(g);
+var mob=function(){return matchMedia('(max-width:980px)').matches;};
+function place(){var r=side.getBoundingClientRect();var shown=r.width>40&&r.right>20&&getComputedStyle(side).visibility!=='hidden'&&!(sh.classList.contains('hid')&&!mob())&&(!mob()||d.body.classList.contains('nav'));
+ g.style.display=shown?'block':'none';if(shown){g.style.left=(r.right-6)+'px';g.style.top=Math.max(r.top,0)+'px';g.style.height=Math.min(r.height,innerHeight-Math.max(r.top,0))+'px';}}
+var x0=null,w0;g.addEventListener('pointerdown',function(e){x0=e.clientX;var cv=parseFloat(mob()?getComputedStyle(d.documentElement).getPropertyValue('--tocw-m'):sh.style.getPropertyValue('--tocw'));w0=cv||side.getBoundingClientRect().width;g.setPointerCapture(e.pointerId);g.classList.add('drag');d.body.classList.add('tocdrag');e.preventDefault();e.stopPropagation();});
+g.addEventListener('pointermove',function(e){if(x0==null)return;var tw;if(mob()){var nw=Math.max(220,Math.min(innerWidth*.92,w0+e.clientX-x0));tw=nw;d.documentElement.style.setProperty('--tocw-m',nw+'px');}
+ else{var nw2=Math.max(200,Math.min(620,w0+e.clientX-x0));tw=nw2;sh.style.setProperty('--tocw',nw2+'px');}place();
+ try{ls&&ls.setItem(mob()?'hc-tocw-m':'hc-tocw',Math.round(tw));}catch(e){}});
+function end(){if(x0==null)return;x0=null;g.classList.remove('drag');d.body.classList.remove('tocdrag');place();}
 g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end);
-g.addEventListener('dblclick',function(){sh.style.removeProperty('--tocw');try{ls&&ls.removeItem('hc-tocw');}catch(e){}});
+g.addEventListener('dblclick',function(){sh.style.removeProperty('--tocw');d.documentElement.style.removeProperty('--tocw-m');try{ls&&ls.removeItem('hc-tocw');ls&&ls.removeItem('hc-tocw-m');}catch(e){}place();});
+try{var wm=ls&&ls.getItem('hc-tocw-m');if(wm)d.documentElement.style.setProperty('--tocw-m',wm+'px');}catch(e){}
+addEventListener('resize',place,{passive:true});addEventListener('scroll',function(){if(!mob())place();},{passive:true});
+new MutationObserver(function(){setTimeout(place,260);place();}).observe(d.body,{attributes:true,attributeFilter:['class']});
+new MutationObserver(function(){setTimeout(place,260);}).observe(sh,{attributes:true,attributeFilter:['class']});
+setTimeout(place,50);setTimeout(place,600);
+/* 顶栏高度随换行变化 → 更新 --tbh */
+var tb=d.querySelector('.topbar');if(tb&&'ResizeObserver' in window)new ResizeObserver(function(){d.documentElement.style.setProperty('--tbh',tb.getBoundingClientRect().height+'px');place();}).observe(tb);
 /* 当前页的主日链接也高亮页面分组 */
 var cur=location.pathname.split('/').pop()||'index.html';d.querySelectorAll('.toc a').forEach(function(a){var h=a.getAttribute('href')||'';if(h.charAt(0)==='#'||h.indexOf(cur)===0)a.classList.add('here');});
 })();
@@ -332,3 +343,34 @@ cnt();})();
 """
 CSS11 += DRILL_CSS
 JS11 += DRILL_JS
+
+TOC2_CSS = r"""
+/* 目录：单行省略（拉宽即可看全）· 分部配色 · 动态高亮 · 手机抽屉也可拉宽 */
+@media (min-width:981px){.side{position:sticky}}
+@media (max-width:980px){.side{position:fixed!important;width:min(var(--tocw-m,300px),92vw)!important;top:var(--tbh)!important;height:calc(100dvh - var(--tbh))!important}.tocgrip{z-index:70}}
+.toc a{--tc:var(--royal);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex!important;align-items:center;gap:5px;min-width:0;
+  border-left:3px solid transparent;transition:background .2s,border-color .2s,color .2s,padding .2s}
+.toc a .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toc a .no,.toc a .emo,.toc a .qr{flex:none}
+.toc a .no{color:var(--tc);font-weight:700}
+.toc a:hover{background:color-mix(in srgb,var(--tc) 10%,transparent);border-left-color:color-mix(in srgb,var(--tc) 50%,transparent);color:var(--tc)}
+.toc a.active{background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 22%,transparent),color-mix(in srgb,var(--tc) 4%,transparent))!important;
+  border-left-color:var(--tc)!important;color:var(--tc)!important;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tc) 18%,transparent)}
+.toc a.active .qr{color:var(--tc)}
+.toc-h{color:var(--tc,var(--muted))!important;border-bottom-color:color-mix(in srgb,var(--tc,var(--rule)) 40%,transparent)!important}
+.toc a.done .t::after{content:" ✓";color:var(--gratitude)}
+"""
+TOC2_JS = r"""
+(function(){var d=document,toc=d.querySelector('.toc');if(!toc)return;
+var C={'总论':'var(--prologue)','总纲':'var(--prologue)','困苦':'var(--misery)','拯救':'var(--deliver)','感恩':'var(--gratitude)','历史':'var(--teal)','跨主日':'#2E7D32','结语':'#2E7D32','附录':'#5B4A2E','三大普世信经':'var(--prologue)','海德堡要理问答':'var(--gratitude)','比利时信条':'var(--deliver)','多特信经':'var(--misery)'};
+var cur='var(--royal)';
+[].forEach.call(toc.children,function(el){
+ if(el.classList.contains('toc-h')){var t=el.textContent;for(var k in C)if(t.indexOf(k)===0){cur=C[k];break;}el.style.setProperty('--tc',cur);return;}
+ if(el.tagName==='A'){el.style.setProperty('--tc',el.classList.contains('toc-src')?'var(--teal)':cur);
+  if(!el.querySelector('.t')){var sp=d.createElement('span');sp.className='t';[].slice.call(el.childNodes).forEach(function(n){if(n.nodeType===3||(n.nodeType===1&&!/\b(no|emo|qr)\b/.test(n.className)))sp.appendChild(n);});
+   var qr=el.querySelector('.qr');if(qr)el.insertBefore(sp,qr);else el.appendChild(sp);}
+  el.title=el.textContent.replace(/\s+/g,' ').trim();}});
+})();
+"""
+CSS11 += TOC2_CSS
+JS11 += TOC2_JS
