@@ -57,6 +57,9 @@ mark.mk-gra{color:#8A4E00!important;background:linear-gradient(104deg,rgba(255,2
  :root:not([data-theme="light"]) mark.mk-cov{color:#9BE0A0!important;background:rgba(143,214,148,.12)!important;box-shadow:inset 3px 0 0 #8FD694!important}
  :root:not([data-theme="light"]) mark.mk-gra{color:#FFD27A!important;background:rgba(255,194,80,.18)!important}}
 body.nomark mark.mk{font-weight:inherit;padding:0;margin:0}
+/* 关键限定词：加粗深色 + 金色双下划线 */
+mark.mk-key{color:var(--ink)!important;font-weight:800;background:none!important;text-decoration:underline double #C27C0E!important;text-decoration-thickness:1.5px!important;text-underline-offset:4px;border-radius:0}
+body.nomark mark.mk-key{text-decoration:none!important}
 /* 序数徽章：第一／第二／第三… 变成彩色圆章 */
 .ord{display:inline-block;font-family:var(--sans);font-size:.78em;font-weight:800;color:#fff;border-radius:99px;padding:1px 8px;margin:0 3px 0 1px;vertical-align:.08em;
   background:var(--oc,#2457C5);box-shadow:0 2px 6px -2px var(--oc,#2457C5)}
@@ -146,7 +149,7 @@ CSS9 += r"""
 .msbar{grid-column:2;grid-row:1/3;display:flex;height:34px;border-radius:10px;overflow:hidden;box-shadow:var(--sh)}
 .msbar i{flex-basis:0;display:grid;place-items:center;color:#fff;font-style:normal;font-family:var(--sans);font-size:12px;font-weight:700;min-width:3px;
   transform-origin:left;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
-.ms-mk-god{background:#7048C0}.ms-mk-sin{background:#D2283E}.ms-mk-chr{background:#2457C5}.ms-mk-spi{background:#0B9484}.ms-mk-cov{background:#2E7D32}.ms-mk-gra{background:#DB8A0B}
+.ms-mk-god{background:#7048C0}.ms-mk-sin{background:#D2283E}.ms-mk-chr{background:#2457C5}.ms-mk-spi{background:#0B9484}.ms-mk-cov{background:#2E7D32}.ms-mk-gra{background:#DB8A0B}.ms-mk-key{background:#5B4A2E}
 .msleg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-family:var(--sans);font-size:13px;color:var(--ink-2)}
 .msleg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-1px}
 @media (max-width:640px){.msrow{grid-template-columns:74px 1fr}.msrow b{font-size:14.5px}}

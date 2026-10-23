@@ -1,7 +1,7 @@
 # 海德堡要理问答 · 52 主日全景解读
 
-> **版本标识：`heidelberg-catechism-52-20261020-v9-CCstudy`**（主题-日期-版本号-CCstudy）
-> 仓库名不含版本号；Surge／Netlify 域名为「主题-日期-版本号-CCser」，由根目录 `VERSION` 文件自动生成；版本号同时显示在网页页脚。
+> **版本标识：`heidelberg-catechism-52-20261023-v10-CCstudy`**（主题-日期-版本号-CCstudy）
+> 仓库名不含版本号；Surge／Netlify 域名为「主题-日期-版本号-CCstudy」（v6–v9 为 -ccser），由根目录 `VERSION` 文件自动生成；版本号同时显示在网页页脚。
 
 欧陆改革宗（三项联合信条）视角的《海德堡要理问答》（Catechesis Palatina, 1563）全书解读。
 信经与信条正文一字不差引自 [ccifellowship.org](https://ccifellowship.org)。
@@ -9,8 +9,8 @@
 | 部署 | 链接 |
 |---|---|
 | GitHub Pages | https://07-je-cc-love-personal-20260918.github.io/heidelberg-catechism-52-CCstudy/ |
-| Surge | https://heidelberg-catechism-52-20261020-v9-ccser.surge.sh |
-| Netlify | https://heidelberg-catechism-52-20261020-v9-ccser.netlify.app |
+| Surge | https://heidelberg-catechism-52-20261023-v10-ccstudy.surge.sh |
+| Netlify | https://heidelberg-catechism-52-20261023-v10-ccstudy.netlify.app |
 | 原文阅读室 | 以上任一站点 + `/texts.html` |
 | 仓库 | https://github.com/07-Je-CC-Love-Personal-20260918/heidelberg-catechism-52-CCstudy |
 
@@ -22,6 +22,7 @@
 
 | 标记 | 日期 | 说明 |
 |---|---|---|
+| `v10-20261023` | 2026-10-23 | 多页面拆分、原生页面过渡与预渲染、全站搜索、每部分一页纸要点、关键限定词标记 |
 | `v9-20261020` | 2026-10-20 | 顺滑性能优化、惯性平滑滚动、新版重点标记、主题词分布图、自动发布恢复点 |
 | `v8-20261020` | 2026-10-20 | 主日 14–19 手机竖版曲线、六色主题词记忆标记、稳健显示 |
 | `v7-20261020` | 2026-10-20 | 图表重绘零重叠、手机完整显示、全屏查看、全站重叠检测通过 |
@@ -32,6 +33,17 @@
 恢复：`git checkout <标记>` 后推送到 `main`，或在 Releases 页下载源码包。
 
 ## 更新说明
+
+**v10 · 2026-10-23**
+- 多页面拆分：单页 1.08MB／1.7 万节点 → 7 个轻量页面（57–190KB，约 3 千节点）＋共享 `assets/site.css`、`assets/site.js`（浏览器缓存，换页不再重复下载）
+  - `index.html` 总论 · `p1-misery.html` 主日 1–4 · `p2-christ.html` 5–19 · `p3-spirit.html` 20–31 · `p4-law.html` 32–44 · `p5-prayer.html` 45–52 · `topics.html` 专题·结语·附录 · `texts.html` 原文
+- 原生顺滑：跨页 View Transitions 淡入滑动；Speculation Rules 预取／悬停预渲染相邻页面，点击几乎瞬开；桌面保留 Lenis 惯性滚动
+- 全站搜索：`assets/search.js` 索引（按需加载），结果面板跨页跳转，主日优先、关键词高亮，回车直达
+- 每个主日页顶部新增「一页纸」：一句话主旨＋五条要点（编号圆章）＋本页主日链条（可点）＋钥节
+- 页面导航条（7 页＋原文）与页底上一页／下一页卡片；目录与正文所有跨页链接自动改写
+- 新增第七类笔记标记 🔑 关键限定词（唯一／唯独／完全／全然／白白／确实／永远）：加粗深色＋金色双下划线
+- 稳健性：脚本按模块隔离（单处出错不影响其余功能），多处空元素防护
+- Surge／Netlify 域名后缀恢复为 -ccstudy
 
 **v9 · 2026-10-20**
 - 顺滑：离屏区块按需渲染（content-visibility）、无限动画离屏自动暂停、标题图标改为悬停才动、大面积毛玻璃改实色半透明（仅顶栏保留）、进度条改 GPU transform、目录高亮节流、修正脚注上标（全角冒号前的 4 处）；桌面滚动中位帧时 33ms→16.7ms（30→60fps），卡顿帧 73%→18%（无 GPU 测试环境），手机宽度约 1%
@@ -61,7 +73,7 @@
 - Surge／Netlify 域名改为 `heidelberg-catechism-52-<日期>-<版本>-ccser`，由 `VERSION` 文件驱动，每版自动生成新域名、旧版域名保留可回看
 - 页脚版本号同样读取 `VERSION`
 
-**发布新版本**：改 `VERSION`（如 `20261101-v10`）→ 推送 `main` → 三站自动部署，新域名即生效。
+**发布新版本**：改 `VERSION`（如 `20261101-v11`）→ 推送 `main` → 三站自动部署，新域名即生效。
 
 **v5 · 2026-10-20**
 - 目录链接全部修复并逐一核对（主页 85 个、原文页 96 个，电脑与手机共 362 次点击测试全部落点准确）：动态顶栏高度、二次校正滚动、长距离先瞬移再平滑、移动端抽屉统一、去掉导致落点漂移的 content-visibility

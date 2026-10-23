@@ -53,26 +53,13 @@ d.querySelectorAll('.chk input').forEach(function(cb){
   cb.addEventListener('change',function(){
     DONE[n]=cb.checked;if(!cb.checked)delete DONE[n];
     sync(n,cb.checked);
-    d.getElementById('doneCount').textContent=Object.keys(DONE).length;
+    var _dc=d.getElementById('doneCount');if(_dc)_dc.textContent=Object.keys(DONE).length;
     try{localStorage.setItem('hc-done',JSON.stringify(DONE));}catch(e){}
   });
 });
-d.getElementById('doneCount').textContent=Object.keys(DONE).length;
+var _dc=d.getElementById('doneCount');if(_dc)_dc.textContent=Object.keys(DONE).length;
 
-/* ---- search ---- */
-var box=d.getElementById('q'),note=d.getElementById('sNote');
-box.addEventListener('input',function(){
-  var v=box.value.trim().toLowerCase(),hits=0;
-  d.querySelectorAll('.ld').forEach(function(c){
-    var ok=!v||c.getAttribute('data-s').toLowerCase().indexOf(v)>-1;
-    c.classList.toggle('hidden',!ok);if(ok)hits++;
-    var l=d.querySelector('.toc a[data-n="'+c.getAttribute('data-n')+'"]');
-    if(l)l.classList.toggle('hidden',!ok);
-  });
-  d.querySelectorAll('.part-div,.introsec,.appsec,.hero').forEach(function(e){e.classList.toggle('hidden',!!v);});
-  note.textContent=v?('搜索「'+box.value.trim()+'」：命中 '+hits+' 个主日'):'';
-  note.classList.toggle('hidden',!v);
-});
+/* search → v10 全站搜索 */
 
 /* ---- scroll spy (rAF + getBoundingClientRect) ---- */
 var secs=[].slice.call(d.querySelectorAll('section[id]'));
@@ -125,8 +112,8 @@ function grade(){
   d.getElementById('score').textContent='得分 '+right+' / '+QZ.length+
     (wrong.length?'　错题：第 '+wrong.join('、')+' 题':'　全对');
 }
-d.getElementById('gradeBtn').onclick=grade;
-d.getElementById('resetBtn').onclick=function(){
+if(d.getElementById('gradeBtn'))d.getElementById('gradeBtn').onclick=grade;
+if(d.getElementById('resetBtn'))d.getElementById('resetBtn').onclick=function(){
   QZ.forEach(function(q){q.classList.remove('done');
     q.querySelectorAll('.opt').forEach(function(o){o.classList.remove('ok','no');});
     q.querySelectorAll('input').forEach(function(i){i.checked=false;});});

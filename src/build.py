@@ -18,6 +18,7 @@ import ui6
 import ui7
 import ui8
 import ui9
+import ui10
 ui7.patch(C, C2)
 ui3.patch_lds(LDS)
 
@@ -401,7 +402,7 @@ def build():
       'SOLI DEO GLORIA<span class="vstamp">' + ui5.VERSION + '</span></div>')
     w('</main></div><button id="tocOpen">目录</button>'
       '<button id="toTop" aria-label="回到顶部">↑</button>')
-    w('<script>%s%s</script></body></html>' % (JS, ui2.JS2 + ui5.JS5 + ui6.JS6 + ui7.JS7 + ui8.JS8 + ui9.JS9))
+    w('<script>%s</script></body></html>' % ''.join('try{%s\n}catch(e){console.error(e)}\n' % x for x in (JS, ui2.JS2, ui5.JS5, ui6.JS6, ui7.JS7, ui8.JS8, ui9.JS9)))
     return o.getvalue()
 
 
@@ -409,8 +410,10 @@ if __name__ == "__main__":
     out = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "index.html")
     h = ui9.enhance(ui8.mark(ui7.add_icons(build())))
     h = h.replace('<!--MKSTAT-->', ui9.mark_stats(h, ui8.CATS), 1)
-    open(out, "w", encoding="utf-8").write(h)
-    print("bytes:", len(h.encode("utf-8")), "->", out)
+    PAGES, WHERE = ui10.split(h, LDS, ui4.EMO, os.path.dirname(out))
+    for _f, _t in PAGES.items():
+        open(os.path.join(os.path.dirname(out), _f), 'w', encoding='utf-8').write(_t)
+    print("pages:", {k: len(v.encode()) for k, v in PAGES.items()})
     t = ui3.texts_page(CSS, ui2.CSS2 + ui4.CSS4 + ui5.CSS5 + ui9.CSS9, ui2.ICONS, LDS, PL)
-    open(os.path.join(os.path.dirname(out), "texts.html"), "w", encoding="utf-8").write(t)
+    open(os.path.join(os.path.dirname(out), "texts.html"), "w", encoding="utf-8").write(ui10.fix_texts(t, WHERE))
     print("texts.html bytes:", len(t.encode("utf-8")))

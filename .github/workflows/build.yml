@@ -22,15 +22,15 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if ! git diff --quiet -- index.html texts.html; then
-            git add index.html texts.html
+          if [ -n "$(git status --porcelain -- '*.html' assets)" ]; then
+            git add -A -- '*.html' assets
             git commit -m "chore: rebuild index.html [skip ci]"
             git push
           fi
       - name: Version → domain
-        run: echo "SITE=heidelberg-catechism-52-$(tr -d '[:space:]' < VERSION)-ccser" >> "$GITHUB_ENV"
+        run: echo "SITE=heidelberg-catechism-52-$(tr -d '[:space:]' < VERSION)-ccstudy" >> "$GITHUB_ENV"
       - name: Stage site
-        run: mkdir -p _site && cp index.html texts.html _site/ && echo "${SITE}.surge.sh" > _site/CNAME_SURGE
+        run: mkdir -p _site && cp *.html _site/ && cp -r assets _site/ && echo "${SITE}.surge.sh" > _site/CNAME_SURGE
       - name: Deploy to Surge
         env:
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
